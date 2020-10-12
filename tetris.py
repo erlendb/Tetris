@@ -14,16 +14,18 @@ class Piece():
         
         self.rotated_matrices = []
         self.rotated_matrices.append(matrix)
-        self.rotated_matrices.append(numpy.rot90(self.rotated_matrices[0], k = 1, axes = (1, 0)))
-        self.rotated_matrices.append(numpy.rot90(self.rotated_matrices[1], k = 1, axes = (1, 0)))
-        self.rotated_matrices.append(numpy.rot90(self.rotated_matrices[2], k = 1, axes = (1, 0)))
+        self.rotated_matrices.append(numpy.rot90(matrix, k = 1, axes = (1, 0)))
+        self.rotated_matrices.append(numpy.rot90(matrix, k = 2, axes = (1, 0)))
+        self.rotated_matrices.append(numpy.rot90(matrix, k = 3, axes = (1, 0)))
         
         self.rotation = 0
         self.position = Position()
     
     def rotate(self, rotation):
         self.rotation = (self.rotation + rotation) % 4
-        self.matrix = self.rotated_matrices[rotation]
+        while self.rotation < 0:
+            self.rotation += 4
+        self.matrix = self.rotated_matrices[self.rotation]
     
     def move_horizontally(self, movement):
         self.position.x += movement
@@ -45,9 +47,9 @@ class Board():
                 if piece.matrix[piece_i][piece_j] == 1:
                     self.matrix[board_i][board_j] = 1
     
-    def pop_line(line):
+    def pop_line(self, line):
         self.matrix.pop(line)
-        self.matrix.append([0 for i in range(width)])
+        self.matrix.append([0 for i in range(self.width)])
         
 class Game():
     def __init__(self):
@@ -84,31 +86,24 @@ class Game():
                     print(' ', end = '')
             print('|')
     
-    def can_piece_go_further(self):
-        new_piece_height = self.piece.position.y - 1
-        for board_i in range(new_piece_height, new_piece_height + len(self.piece.matrix)):
-            piece_i = board_i - new_piece_height
-            for board_j in range(self.piece.position.x, self.piece.position.x + len(self.piece.matrix[0])):
-                piece_j = board_j - self.piece.position.x
-                if (self.piece.matrix[piece_i][piece_j] == 1 and self.board.matrix[board_i][board_j] == 1) or (new_piece_height < 0):
-                    return False
-        return True
-    
-    def is_piece_position_allowed(self, x, y, rotation):
+    def is_piece_position_allowed(self, x = None, y = None, rotation = None):
         piece = deepcopy(self.piece)
-        piece.position.x = x
-        piece.position.y = y
-        piece.rotate(rotation)
+        if x is not None:
+            piece.position.x = x
+        if y is not None:
+            piece.position.y = y
+        if rotation is not None:
+            piece.rotate(rotation)
         
-        for board_i in range(piece.position.y, piece.position.y + len(self.piece.matrix)):
+        for board_i in range(piece.position.y, min(self.board.height, piece.position.y + len(piece.matrix))):
             piece_i = board_i - piece.position.y
             for board_j in range(piece.position.x, piece.position.x + len(piece.matrix[0])):
                 piece_j = board_j - piece.position.x
-                if (piece.matrix[piece_i][piece_j] == 1 and self.board.matrix[board_i][board_j] == 1):
+                if piece.position.y < 0:
                     return False
-                elif piece.position.y < 0:
+                elif piece.position.x < 0 or piece.position.x + len(piece.matrix[0]) - 1 >= self.board.width:
                     return False
-                elif piece.position.x < 0 or piece.position.x + len(piece.matrix[0]) >= self.board.width:
+                elif (piece.matrix[piece_i][piece_j] == 1 and self.board.matrix[board_i][board_j] == 1):
                     return False
         return True
     
@@ -121,20 +116,33 @@ class Game():
                 return False
         return True
     
+    def pop_full_lines(self):
+        for i in range(self.board.height):
+            line_is_full = True
+            for j in range(self.board.width):
+                if self.board.matrix[i][j] == 0:
+                    line_is_full = False
+                    break
+            if line_is_full:
+                self.board.pop_line(i)
+    
     def rotate_piece(self, rotation):
-        # check overflow
-        self.piece.rotate(rotation)
+        if self.is_piece_position_allowed(rotation = rotation):
+            self.piece.rotate(rotation)
         
     def rotate_piece_clockwise(self):
         self.rotate_piece(1)
 
     def move_piece_down(self):
-        if self.piece.position.y > 0:
+        if self.is_piece_position_allowed(y = self.piece.position.y - 1):
+            self.piece.move_vertically(-1)
+        
+    def move_piece_down_until_not_allowed(self):
+        while self.is_piece_position_allowed(y = self.piece.position.y - 1):
             self.piece.move_vertically(-1)
 
     def move_piece_horizontally(self, movement):
-        new_x = self.piece.position.x + movement
-        if (new_x >= 0 and new_x + len(self.piece.matrix[0]) < self.board.width):
+        if self.is_piece_position_allowed(x = self.piece.position.x + movement):
             self.piece.move_horizontally(movement)
 
     def move_piece_left(self):
@@ -144,13 +152,13 @@ class Game():
         self.move_piece_horizontally(1)
     
     def tick(self):
-        if self.can_piece_go_further():
-            self.piece.move_vertically(-1)
+        if self.is_piece_position_allowed(y = self.piece.position.y - 1):
+            self.move_piece_down()
             self.tick_count += 1
         else:
             self.board.add_piece(self.piece)
             
-            # pop line if full
+            self.pop_full_lines()
             
             self.piece = random.choice(self.pieces)
             self.piece.position.y = self.board.height - 1

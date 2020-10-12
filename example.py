@@ -13,6 +13,10 @@ def key_press_handler(event):
         game.move_piece_right()
     elif event.name == 'up':
         game.rotate_piece_clockwise()
+    elif event.name == 'down':
+        game.move_piece_down()
+    elif event.name == 'space':
+        game.move_piece_down_until_not_allowed()
 keyboard.on_press(key_press_handler)
 
 while not game.is_game_over():
@@ -20,3 +24,6 @@ while not game.is_game_over():
         i += 1
         game.tick()
         game.print()
+
+game.print()
+print('Game over')
