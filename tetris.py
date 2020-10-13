@@ -52,17 +52,22 @@ class Board():
         self.matrix.append([0 for i in range(self.width)])
         
 class Game():
-    def __init__(self):
-        self.board = Board(10, 10)
+    def __init__(self, board_width = 10, board_height = 20, pieces = None):
+        self.board = Board(board_width, board_height)
 
-        self.pieces = []
-        self.pieces.append(Piece([[1, 1, 1, 1]]))
-        self.pieces.append(Piece([[1, 0, 0], [1, 1, 1]]))
-        self.pieces.append(Piece([[0, 0, 1], [1, 1, 1]]))
-        self.pieces.append(Piece([[1, 1],    [1, 1]]))
-        self.pieces.append(Piece([[0, 1, 1], [1, 1, 0]]))
-        self.pieces.append(Piece([[0, 1, 0], [1, 1, 1]]))
-        self.pieces.append(Piece([[1, 1, 0], [0, 1, 1]]))
+        if pieces is None:
+            self.pieces = []
+            self.pieces.append(Piece([[1, 1, 1, 1]]))
+            self.pieces.append(Piece([[1, 0, 0], [1, 1, 1]]))
+            self.pieces.append(Piece([[0, 0, 1], [1, 1, 1]]))
+            self.pieces.append(Piece([[1, 1],    [1, 1]]))
+            self.pieces.append(Piece([[0, 1, 1], [1, 1, 0]]))
+            self.pieces.append(Piece([[0, 1, 0], [1, 1, 1]]))
+            self.pieces.append(Piece([[1, 1, 0], [0, 1, 1]]))
+        else:
+            self.pieces = []
+            for i in range(0, len(pieces)):
+                self.pieces.append(Piece(pieces[i]))
 
         self.piece = random.choice(self.pieces)
         self.piece.position.x = int(self.board.width/2 - len(self.piece.matrix[0])/2)
@@ -72,7 +77,7 @@ class Game():
         self.round_count = 0
         
     def print(self):
-        print('Round count: ', self.round_count)
+        print('\n\nRound count: ', self.round_count)
         print('Tick count: ', self.tick_count)
         
         board_to_print = deepcopy(self.board)

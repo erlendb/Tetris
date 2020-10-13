@@ -2,7 +2,7 @@ import tetris
 import time
 import keyboard
 
-game = tetris.Game()
+game = tetris.Game(board_height = 10)
 start_time = time.time()
 i = 0
 
