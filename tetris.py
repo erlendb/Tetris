@@ -53,8 +53,6 @@ class Board():
         
 class Game():
     def __init__(self, board_width = 10, board_height = 20, pieces = None):
-        self.board = Board(board_width, board_height)
-
         if pieces is None:
             self.pieces = []
             self.pieces.append(Piece([[1, 1, 1, 1]]))
@@ -68,10 +66,14 @@ class Game():
             self.pieces = []
             for i in range(0, len(pieces)):
                 self.pieces.append(Piece(pieces[i]))
-
+                
+        self.board = Board(board_width, board_height)
+        
         self.piece = random.choice(self.pieces)
         self.piece.position.x = int(self.board.width/2 - len(self.piece.matrix[0])/2)
         self.piece.position.y = self.board.height - 1
+        
+        self.next_piece_id = random.randrange(len(self.pieces))
         
         self.tick_count = 0
         self.round_count = 0
@@ -79,6 +81,16 @@ class Game():
     def print(self):
         print('\n\nRound count: ', self.round_count)
         print('Tick count: ', self.tick_count)
+        
+        print('\nNext piece:')
+        next_piece = self.pieces[self.next_piece_id]
+        for i in range(0, len(next_piece.matrix)):
+            for j in range(0, len(next_piece.matrix[0])):
+                if next_piece.matrix[i][j] == 1:
+                    print('X', end = '')
+                else:
+                    print(' ', end = '')
+            print()
         
         board_to_print = deepcopy(self.board)
         board_to_print.add_piece(self.piece)
@@ -131,6 +143,18 @@ class Game():
             if line_is_full:
                 self.board.pop_line(i)
     
+    def set_piece(self, piece_id):
+        if piece_id >= 0 and piece_id < len(self.pieces):
+            self.piece = self.pieces[piece_id]
+    
+    def set_next_piece(self, piece_id):
+        if piece_id >= 0 and piece_id < len(self.pieces):
+            self.next_piece_id = piece_id
+    
+    def reset_piece_position(self):
+        self.piece.position.y = self.board.height - 1
+        self.piece.position.x = int(self.board.width/2 - len(self.piece.matrix[0])/2)
+    
     def rotate_piece(self, rotation):
         if self.is_piece_position_allowed(rotation = rotation):
             self.piece.rotate(rotation)
@@ -165,9 +189,9 @@ class Game():
             
             self.pop_full_lines()
             
-            self.piece = random.choice(self.pieces)
-            self.piece.position.y = self.board.height - 1
-            self.piece.position.x = int(self.board.width/2 - len(self.piece.matrix[0])/2)
+            self.set_piece(self.next_piece_id)
+            self.reset_piece_position()
+            self.set_next_piece(random.randint(0, len(self.pieces)))
             
             self.tick_count = 0
             self.round_count += 1
