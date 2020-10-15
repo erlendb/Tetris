@@ -41,9 +41,9 @@ class Board():
     
     def add_piece(self, piece):
         for board_i in range(piece.position.y, min(self.height, piece.position.y + len(piece.matrix))):
-            piece_i = board_i - piece.position.y
+            piece_i = -1 - (board_i - piece.position.y)
             for board_j in range(piece.position.x, piece.position.x + len(piece.matrix[0])):
-                piece_j = board_j - piece.position.x
+                piece_j = (board_j - piece.position.x)
                 if piece.matrix[piece_i][piece_j] == 1:
                     self.matrix[board_i][board_j] = 1
     
@@ -113,7 +113,7 @@ class Game():
             piece.rotate(rotation)
         
         for board_i in range(piece.position.y, min(self.board.height, piece.position.y + len(piece.matrix))):
-            piece_i = board_i - piece.position.y
+            piece_i = -1 - (board_i - piece.position.y)
             for board_j in range(piece.position.x, piece.position.x + len(piece.matrix[0])):
                 piece_j = board_j - piece.position.x
                 if piece.position.y < 0:
