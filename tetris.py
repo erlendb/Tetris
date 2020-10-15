@@ -142,6 +142,46 @@ class Game():
                     break
             if line_is_full:
                 self.board.pop_line(i)
+            
+    def tick(self):
+        if self.is_piece_position_allowed(y = self.piece.position.y - 1):
+            self.move_piece_down()
+            self.tick_count += 1
+        else:
+            self.board.add_piece(self.piece)
+            
+            self.pop_full_lines()
+            
+            self.set_piece(self.next_piece_id)
+            self.reset_piece_position()
+            self.set_next_piece(random.randint(0, len(self.pieces)))
+            
+            self.tick_count = 0
+            self.round_count += 1
+    
+    def get_tick_count(self):
+        return self.tick_count
+    
+    def get_round_count(self):
+        return self.round_count
+    
+    def get_board(self):
+        return self.board.matrix
+    
+    def get_piece(self):
+        return self.piece.matrix
+    
+    def get_board_with_piece(self):
+        # merge them and return matrix
+        pass
+    
+    def get_piece_position(self):
+        return self.piece.position.x, self.piece.position.y
+    
+    def set_piece_position(self, x, y):
+        # check if position is allowed
+            # update position
+        pass
     
     def set_piece(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
@@ -179,19 +219,3 @@ class Game():
 
     def move_piece_right(self):
         self.move_piece_horizontally(1)
-    
-    def tick(self):
-        if self.is_piece_position_allowed(y = self.piece.position.y - 1):
-            self.move_piece_down()
-            self.tick_count += 1
-        else:
-            self.board.add_piece(self.piece)
-            
-            self.pop_full_lines()
-            
-            self.set_piece(self.next_piece_id)
-            self.reset_piece_position()
-            self.set_next_piece(random.randint(0, len(self.pieces)))
-            
-            self.tick_count = 0
-            self.round_count += 1
