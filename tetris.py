@@ -177,9 +177,9 @@ class Game():
         return self.piece.position.x, self.piece.position.y
     
     def set_piece_position(self, x, y):
-        # check if position is allowed
-            # update position
-        pass
+        if self.is_piece_position_allowed(x = x, y = y):
+            self.piece.position.x = x
+            self.piece.position.y = y
     
     def set_piece(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
@@ -190,8 +190,7 @@ class Game():
             self.next_piece_id = piece_id
     
     def reset_piece_position(self):
-        self.piece.position.y = self.board.height - 1
-        self.piece.position.x = int(self.board.width/2 - len(self.piece.matrix[0])/2)
+        self.set_piece_position(x = int(self.board.width/2 - len(self.piece.matrix[0])/2), y = self.board.height - 1)
     
     def rotate_piece(self, rotation):
         if self.is_piece_position_allowed(rotation = rotation):
