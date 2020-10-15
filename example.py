@@ -2,10 +2,6 @@ import tetris
 import time
 import keyboard
 
-game = tetris.Game(board_height = 10)
-start_time = time.time()
-i = 0
-
 def key_press_handler(event):
     if event.name == 'left':
         game.move_piece_left()
@@ -19,6 +15,10 @@ def key_press_handler(event):
         game.move_piece_down_until_not_allowed()
 keyboard.on_press(key_press_handler)
 
+game = tetris.Game()
+
+start_time = time.time()
+i = 0
 while not game.is_game_over():
     if time.time() > start_time + i:
         i += 1
