@@ -69,11 +69,9 @@ class Game():
                 
         self.board = Board(board_width, board_height)
         
-        self.piece = random.choice(self.pieces)
-        self.piece.position.x = int(self.board.width/2 - len(self.piece.matrix[0])/2)
-        self.piece.position.y = self.board.height - 1
-        
-        self.next_piece_id = random.randrange(len(self.pieces))
+        self.set_piece(random.randrange(len(self.pieces)))
+        self.reset_piece_position()
+        self.set_next_piece(random.randrange(len(self.pieces)))
         
         self.tick_count = 0
         self.round_count = 0
@@ -185,7 +183,7 @@ class Game():
     
     def set_piece(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
-            self.piece = self.pieces[piece_id]
+            self.piece = deepcopy(self.pieces[piece_id])
     
     def set_next_piece(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
