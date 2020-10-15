@@ -3,7 +3,7 @@
 This thing is supposed to be some sort of framework for playing Tetris. The idea is to use this framwork together with machine learning methods. Machine learning methods can be implemented so that they interact directly with the Tetris framework.
 
 * *tetris.py* contains the Tetris framework, as explained in the Reference section.
-* *example.py* contains a simple implementation of a terminal Tetris game, using the framework.
+* *example.py* contains a simple implementation of a terminal Tetris game, using the framework. Run with `sudo python3 example.py`. `sudo` is needed due to the use of the `keyboard` module.
 
 ## Reference
 
