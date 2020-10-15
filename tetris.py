@@ -89,6 +89,7 @@ class Game():
                 else:
                     print(' ', end = '')
             print()
+        print()
         
         board_to_print = deepcopy(self.board)
         board_to_print.add_piece(self.piece)
