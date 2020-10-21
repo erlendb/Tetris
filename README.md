@@ -65,7 +65,7 @@ The current piece. This is the piece the player is about to place on the board. 
 
 Note that errors might occur if you try to modify or call the methods of the `piece` directly.
 
-#### `next_piece`
+#### `next_piece_id`
 The id of the piece that will become current in the next round.
 
 #### `board`
@@ -129,7 +129,7 @@ Set a new position of the current piece, given that the provided position is all
 #### `set_piece(piece_id)`
 Change the current piece, given that the `piece_id` exists in the `pieces` list.
 
-#### `set_next_piece(piece_id)`
+#### `set_next_piece_id(piece_id)`
 Change the next piece, given that the `piece_id` exists in the `pieces` list.
 
 #### `reset_piece_position()`

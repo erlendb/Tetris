@@ -71,7 +71,7 @@ class Game():
         
         self.set_piece(random.randrange(len(self.pieces)))
         self.reset_piece_position()
-        self.set_next_piece(random.randrange(len(self.pieces)))
+        self.set_next_piece_id(random.randrange(len(self.pieces)))
         
         self.tick_count = 0
         self.round_count = 0
@@ -153,7 +153,7 @@ class Game():
             
             self.set_piece(self.next_piece_id)
             self.reset_piece_position()
-            self.set_next_piece(random.randint(0, len(self.pieces)))
+            self.set_next_piece_id(random.randint(0, len(self.pieces)))
             
             self.tick_count = 0
             self.round_count += 1
@@ -186,7 +186,7 @@ class Game():
         if piece_id >= 0 and piece_id < len(self.pieces):
             self.piece = deepcopy(self.pieces[piece_id])
     
-    def set_next_piece(self, piece_id):
+    def set_next_piece_id(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
             self.next_piece_id = piece_id
     
