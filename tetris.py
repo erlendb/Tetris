@@ -178,6 +178,9 @@ class Game():
     def get_round_count(self):
         return self.round_count
 
+    def get_score(self):
+        return self.score
+
     def get_board(self):
         return self.board.matrix
 
