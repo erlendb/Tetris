@@ -144,7 +144,7 @@ class Game():
 
     def pop_full_lines(self):
         popped_lines = 0
-        for i in range(self.board.height):
+        for i in reversed(range(self.board.height)):
             line_is_full = True
             for j in range(self.board.width):
                 if self.board.matrix[i][j] == 0:
