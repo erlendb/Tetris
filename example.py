@@ -26,4 +26,6 @@ while not game.is_game_over():
         game.print()
 
 game.print()
-print('Game over')
+print('\nGame over, your final score was', game.score)
+
+input("Press enter key to continue")
