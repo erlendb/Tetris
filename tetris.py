@@ -71,16 +71,12 @@ class Game():
 
         self.set_piece(random.randrange(len(self.pieces)))
         self.reset_piece_position()
-<<<<<<< HEAD
         self.set_next_piece_id(random.randrange(len(self.pieces)))
-        
-=======
-        self.set_next_piece(random.randrange(len(self.pieces)))
 
->>>>>>> c76784f... Add score
         self.tick_count = 0
         self.round_count = 0
         self.score = 0
+        self._game_over = False
 
         self.line_clear_scores = {
             0: 0,
@@ -139,6 +135,9 @@ class Game():
         return True
 
     def is_game_over(self):
+        if self._game_over:
+            return True
+
         for i in reversed(range(0, self.board.height)):
             for j in range(self.board.width):
                 if self.board.matrix[i][j] > 0:
@@ -146,6 +145,9 @@ class Game():
             if j == self.board.width - 1:
                 return False
         return True
+
+    def set_game_over(self, game_over):
+        self._game_over = game_over
 
     def pop_full_lines(self):
         popped_lines = 0
@@ -171,13 +173,8 @@ class Game():
 
             self.set_piece(self.next_piece_id)
             self.reset_piece_position()
-<<<<<<< HEAD
             self.set_next_piece_id(random.randint(0, len(self.pieces)))
-            
-=======
-            self.set_next_piece(random.randint(0, len(self.pieces)))
 
->>>>>>> c76784f... Add score
             self.tick_count = 0
             self.round_count += 1
 
@@ -210,13 +207,8 @@ class Game():
     def set_piece(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
             self.piece = deepcopy(self.pieces[piece_id])
-<<<<<<< HEAD
-    
-    def set_next_piece_id(self, piece_id):
-=======
 
-    def set_next_piece(self, piece_id):
->>>>>>> c76784f... Add score
+    def set_next_piece_id(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
             self.next_piece_id = piece_id
 
