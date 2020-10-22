@@ -46,7 +46,7 @@ Rotate counter-clockwise |  Original rotation: | Rotate clockwise
 game.rotate_piece(-1)    |                     | game.rotate_piece(1)
                          |                     | game.rotate_piece_clockwise()
                          |         X           |
-                X        |         X           |     XXX
+                  X      |         X           |     XXX
                 XXX      |         XX          |     X
 ```
 The piece will always be positioned on the board based on its left bottom pixel.
