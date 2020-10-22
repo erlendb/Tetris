@@ -4,6 +4,8 @@ This thing is supposed to be some sort of framework for playing Tetris. The idea
 
 * *tetris.py* contains the Tetris framework, as explained in the Reference section.
 * *example.py* contains a simple implementation of a terminal Tetris game, using the framework. Run with `sudo python3 example.py`. `sudo` is needed due to the use of the `keyboard` module.
+* graphic_example contains a graphical implementation based on pyGame. Run with `sudo python3 example.py` as in example.py.
+    * To install pygame on python 3.8, use `python3 -m pip install pygame==2.0.0.dev10`
 
 ## Reference
 
@@ -127,7 +129,7 @@ Initiates the game.
 
 * `board_width` (optional): the with of the game board
 * `board_height` (optional): the height of the game board
-* `pieces` (optional): list of pieces that will be available for the player. 
+* `pieces` (optional): list of pieces that will be available for the player.
 
 If not specified, the board width and board height will be set to the default values og the `Board` class. The pieces list will default to the 7 standard Tetris pieces.
 
