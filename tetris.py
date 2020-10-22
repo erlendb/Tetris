@@ -76,11 +76,16 @@ class Game():
         self.tick_count = 0
         self.round_count = 0
         self.popped_lines = 0
+        
+        self.placed_position = Position()
+        self.placed_rotation = 0
 
     def print(self):
         print('\n\nRound count: ', self.round_count)
         print('Tick count: ', self.tick_count)
         print('Popped lines: ', self.popped_lines)
+        print('Placed position: ', self.placed_position.x, self.placed_position.y)
+        print('Popped rotation: ', self.placed_rotation)
 
         print('\nNext piece:')
         next_piece = self.pieces[self.next_piece_id]
@@ -152,6 +157,8 @@ class Game():
             self.move_piece_down()
             self.tick_count += 1
         else:
+            self.placed_position = self.piece.position
+            self.placed_rotation = self.piece.rotation
             self.board.add_piece(self.piece)
 
             self.pop_full_lines()
@@ -170,6 +177,12 @@ class Game():
 
     def get_popped_lines(self):
         return self.popped_lines
+
+    def get_placed_position(self):
+        return self.placed_position.x, self.placed_position.y
+
+    def get_placed_rotation(self):
+        return self.placed_rotation
 
     def get_board(self):
         return self.board.matrix
