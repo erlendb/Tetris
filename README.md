@@ -25,6 +25,32 @@ Pieces are represented as two dimensional lists. E.g. the square piece and the "
 ]
 ```
 
+### Piece movement
+Vertical and horizontal movement:
+
+```
+Move left                         | Original |   Move right
+game.move_piece_horizontally(-1)  | piece    |   game.move_piece_horizontally(1)
+game.move_piece_left()            | position |   game.move_piece_right()
+
+                              Move down
+                              game.move_piece_down()
+
+                              Move down as far as allowed
+                              game.move_piece_down_until_not_allowed()
+```
+
+Piece rotation:
+```
+Rotate counter-clockwise |  Original rotation: | Rotate clockwise
+game.rotate_piece(-1)    |                     | game.rotate_piece(1)
+                         |                     | game.rotate_piece_clockwise()
+                         |         X           |
+                  X      |         X           |     XXX
+                XXX      |         XX          |     X
+```
+The piece will always be positioned on the board based on its left bottom pixel.
+
 ### The board
 The board is represented as a two dimensional list. Below is an example of a game board as the user will see it:
 ```
@@ -79,6 +105,23 @@ The number of ticks performed this round.
 #### `round_count`
 The number of rounds since the game started. The round count is increased each time a piece is permanently added to the board.
 
+#### `score`
+The score achieved so far in the game.
+
+#### `line_clear_scores`
+
+A dictionary defining how much score the player will get when clearing a number of lines from the board. The dictionary is on the form `number of lines cleared: score`.
+By default:
+```python
+{
+  0: 0,
+  1: 100,
+  2: 300,
+  3: 500,
+  4: 800
+}
+```
+
 #### `__init__( [board_width, board_height, pieces] )`
 Initiates the game.
 
@@ -100,7 +143,7 @@ Returns `False` if the piece crashes with already filled spots on the board, or 
 Returns `True` if there are no empty lines left on the board.
 
 #### `pop_full_lines()`
-Pops all the full lines of the board. Adds empty line on the top of the board for each line popped.
+Pops all the full lines of the board. Adds empty line on the top of the board for each line popped. Returns the number of lines that was popped.
 
 #### `tick()`
 Takes the game one step further. This means lowering the piece one step on the board if possible. If not possible, the piece is permanently added to the board at its current position, then full lines are popped, and the current piece and the next piece is updated.
@@ -122,6 +165,9 @@ Returns a merged matrix of the board matrix and the matrix of the current piece 
 
 #### `get_piece_position()`
 Returns the position `x, y` of the current piece
+
+#### `get_score()`
+Get the current score.
 
 #### `set_piece_position(x, y)`
 Set a new position of the current piece, given that the provided position is allowed.

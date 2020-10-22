@@ -84,7 +84,7 @@ while not game.is_game_over():
 
 pygame.quit()
 game.print()
-print('\nGame over, your final score was', game.score)
+print('\nGame over, your final score was', game.get_score())
 
 input("Press enter to continue")
 

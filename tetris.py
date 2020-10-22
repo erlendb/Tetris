@@ -89,7 +89,7 @@ class Game():
     def print(self):
         print('\n\nRound count: ', self.round_count)
         print('Tick count: ', self.tick_count)
-        print(f"score: {self.score}")
+        print(f"Score: {self.score}")
 
         print('\nNext piece:')
         next_piece = self.pieces[self.next_piece_id]
@@ -151,7 +151,7 @@ class Game():
 
     def pop_full_lines(self):
         popped_lines = 0
-        for i in range(self.board.height):
+        for i in reversed(range(self.board.height)):
             line_is_full = True
             for j in range(self.board.width):
                 if self.board.matrix[i][j] == 0:
@@ -174,7 +174,6 @@ class Game():
             self.set_piece(self.next_piece_id)
             self.reset_piece_position()
             self.set_next_piece_id(random.randint(0, len(self.pieces)))
-
             self.tick_count = 0
             self.round_count += 1
 
@@ -185,6 +184,9 @@ class Game():
 
     def get_round_count(self):
         return self.round_count
+
+    def get_score(self):
+        return self.score
 
     def get_board(self):
         return self.board.matrix
