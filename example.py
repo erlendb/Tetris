@@ -3,6 +3,8 @@ import time
 import keyboard
 import pygame
 
+from copy import deepcopy
+
 def key_press_handler(event):
     if event.name == 'left':
         game.move_piece_left()
@@ -37,7 +39,9 @@ BOARD_WIDTH = 10
 BOARD_HEIGHT = 15
 
 game = tetris.Game(BOARD_WIDTH, BOARD_HEIGHT)
-display_size = [SQUARE_SIZE * BOARD_WIDTH, SQUARE_SIZE * BOARD_HEIGHT]
+DISPLAY_HEIGHT = SQUARE_SIZE * BOARD_HEIGHT
+DISPLAY_WIDTH = SQUARE_SIZE * BOARD_WIDTH
+display_size = [DISPLAY_WIDTH, DISPLAY_HEIGHT]
 
 # Set up the drawing window
 screen = pygame.display.set_mode(display_size)
@@ -62,10 +66,18 @@ while not game.is_game_over():
     screen.fill(pygame.Color('white'))
 
     # Draw the board
-    for i, row in enumerate(game.board.matrix):
+    board_to_print = deepcopy(game.board)
+    board_to_print.add_piece(game.piece)
+    for i, row in enumerate(board_to_print.matrix):
         for j, square in enumerate(row):
             if square:
-                pygame.draw.rect(screen, BLUE, (i*SQUARE_SIZE, j*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+                pos = (j*SQUARE_SIZE, DISPLAY_HEIGHT-(i+1)*SQUARE_SIZE)
+                tetromino_part = pygame.Rect(pos[0], pos[1], SQUARE_SIZE, SQUARE_SIZE)
+                pygame.draw.rect(screen, BLUE, tetromino_part)  # Draw tetromino_part
+                pygame.draw.rect(screen, BLACK, tetromino_part, 1) # Draw black border
+
+
+
 
     # Draw to screen
     pygame.display.flip()
