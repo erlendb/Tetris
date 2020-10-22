@@ -75,20 +75,12 @@ class Game():
         
         self.tick_count = 0
         self.round_count = 0
-        self.score = 0
-
-        self.line_clear_scores = {
-            0: 0,
-            1: 100,
-            2: 300,
-            3: 500,
-            4: 800
-        }
+        self.popped_lines = 0
 
     def print(self):
         print('\n\nRound count: ', self.round_count)
         print('Tick count: ', self.tick_count)
-        print(f"Score: {self.score}")
+        print('Popped lines: ', self.popped_lines)
 
         print('\nNext piece:')
         next_piece = self.pieces[self.next_piece_id]
@@ -153,7 +145,7 @@ class Game():
             if line_is_full:
                 self.board.pop_line(i)
                 popped_lines += 1
-        return popped_lines
+        self.popped_lines = popped_lines
 
     def tick(self):
         if self.is_piece_position_allowed(y = self.piece.position.y - 1):
@@ -162,7 +154,7 @@ class Game():
         else:
             self.board.add_piece(self.piece)
 
-            popped_lines = self.pop_full_lines()
+            self.pop_full_lines()
 
             self.set_piece(self.next_piece_id)
             self.reset_piece_position()
@@ -170,16 +162,14 @@ class Game():
             self.tick_count = 0
             self.round_count += 1
 
-            self.score += self.line_clear_scores[popped_lines]
-
     def get_tick_count(self):
         return self.tick_count
 
     def get_round_count(self):
         return self.round_count
 
-    def get_score(self):
-        return self.score
+    def get_popped_lines(self):
+        return self.popped_lines
 
     def get_board(self):
         return self.board.matrix
