@@ -86,6 +86,7 @@ class Game():
         print('Popped lines: ', self.popped_lines)
         print('Placed position: ', self.placed_position.x, self.placed_position.y)
         print('Popped rotation: ', self.placed_rotation)
+        print('Number of holes: ', self.get_number_of_holes())
 
         print('\nNext piece:')
         next_piece = self.pieces[self.next_piece_id]
@@ -183,6 +184,18 @@ class Game():
 
     def get_placed_rotation(self):
         return self.placed_rotation
+        
+    def get_number_of_holes(self):
+        number_of_holes = 0
+        for j in range(self.board.width):
+            shouldCountHoles = False
+            for i in reversed(range(self.board.height)):
+                if self.board.matrix[i][j] == 1:
+                    shouldCountHoles = True
+                if shouldCountHoles:
+                    if self.board.matrix[i][j] == 0:
+                        number_of_holes += 1
+        return number_of_holes
 
     def get_board(self):
         return self.board.matrix
