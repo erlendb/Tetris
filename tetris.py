@@ -85,7 +85,7 @@ class Game():
         print('Tick count: ', self.tick_count)
         print('Popped lines: ', self.popped_lines)
         print('Placed position: ', self.placed_position.x, self.placed_position.y)
-        print('Popped rotation: ', self.placed_rotation)
+        print('Placed rotation: ', self.placed_rotation)
         print('Number of holes: ', self.get_number_of_holes())
 
         print('\nNext piece:')
