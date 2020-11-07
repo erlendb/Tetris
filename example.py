@@ -4,11 +4,11 @@ import keyboard
 
 def key_press_handler(event):
     if event.name == 'left':
-        game.move_piece_left()
+        game.move_piece_horizontally(-1)
     elif event.name == 'right':
-        game.move_piece_right()
+        game.move_piece_horizontally(1)
     elif event.name == 'up':
-        game.rotate_piece_clockwise()
+        game.rotate_piece(1)
     elif event.name == 'down':
         game.move_piece_down()
     elif event.name == 'space':
