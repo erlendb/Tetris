@@ -184,9 +184,6 @@ Reset the position of the current piece according to the board dimensions. The p
 #### `rotate_piece(rotation)`
 Rotate the current piece `rotation` times clockwise, given that the new piece position and orientation is allowed. `rotation` can be any integer.
 
-#### `rotate_piece_clockwise()`
-Rotate the current piece one time clockwise, given that the ned piece position and orientation is allowed
-
 #### `move_piece_down()`
 Move the current piece one step down on the board, without performing a tick, given that the new position is allowed.
 
@@ -195,9 +192,3 @@ Move the current piece as far down on the board as possible, without performing 
 
 #### `move_piece_horizontally(movement)`
 Move the current piece `movement` steps horizontally, given that the new position is allowed.
-
-#### `move_piece_left()`
-Move the current piece one step left, given that the new position is allowed.
-
-#### `move_piece_right()`
-Move the current piece one step right, given that the new position is allowed.
