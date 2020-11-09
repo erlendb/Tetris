@@ -252,9 +252,6 @@ class Game():
         if self.is_piece_position_allowed(rotation = rotation):
             self.piece.rotate(rotation)
 
-    def rotate_piece_clockwise(self):
-        self.rotate_piece(1)
-
     def move_piece_down(self):
         if self.is_piece_position_allowed(y = self.piece.position.y - 1):
             self.piece.move_vertically(-1)
@@ -266,9 +263,3 @@ class Game():
     def move_piece_horizontally(self, movement):
         if self.is_piece_position_allowed(x = self.piece.position.x + movement):
             self.piece.move_horizontally(movement)
-
-    def move_piece_left(self):
-        self.move_piece_horizontally(-1)
-
-    def move_piece_right(self):
-        self.move_piece_horizontally(1)
