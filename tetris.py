@@ -221,13 +221,18 @@ class Game():
             for xpos in range(game.board.width):
                 if not game.is_piece_position_allowed(x = xpos):
                     continue
-                game.set_piece_position(xpos, 0)
+                game.set_piece_position(x = xpos)
                 game.move_piece_down_until_not_allowed()
                 
                 possible_piece_placements.append((game.get_piece_position(), game.get_piece_rotation()))
+                game.reset_piece_position()
         return possible_piece_placements
 
-    def set_piece_position(self, x, y):
+    def set_piece_position(self, x = None, y = None):
+        if x is None:
+            x = self.piece.position.x
+        if y is None:
+            y = self.piece.position.y
         if self.is_piece_position_allowed(x = x, y = y):
             self.piece.position.x = x
             self.piece.position.y = y
