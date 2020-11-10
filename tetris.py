@@ -1,7 +1,7 @@
 import numpy
 import random
 import time
-from copy import deepcopy
+from copy import deepcopy            
 
 class Position():
     def __init__(self, x = -1, y = -1):
@@ -209,8 +209,30 @@ class Game():
 
     def get_piece_position(self):
         return self.piece.position.x, self.piece.position.y
+        
+    def get_piece_rotation(self):
+        return self.piece.rotation
+    
+    def get_possible_piece_placements(self):
+        possible_piece_placements = []
+        game = deepcopy(self)
+        for rot in range(4):
+            game.piece.rotate(1)
+            for xpos in range(game.board.width):
+                if not game.is_piece_position_allowed(x = xpos):
+                    continue
+                game.set_piece_position(x = xpos)
+                game.move_piece_down_until_not_allowed()
+                
+                possible_piece_placements.append((game.get_piece_position(), game.get_piece_rotation()))
+                game.reset_piece_position()
+        return possible_piece_placements
 
-    def set_piece_position(self, x, y):
+    def set_piece_position(self, x = None, y = None):
+        if x is None:
+            x = self.piece.position.x
+        if y is None:
+            y = self.piece.position.y
         if self.is_piece_position_allowed(x = x, y = y):
             self.piece.position.x = x
             self.piece.position.y = y
