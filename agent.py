@@ -8,6 +8,8 @@ class Agent():
                 self,
                 gamma=0.9,
                 epsilon=0.9,
+                num_training_games=10000,
+                memory_size=5000
                 ):
 
         """
@@ -18,12 +20,20 @@ class Agent():
         epsilon: exploration vs exploitation, [0, 1]
             0 for always choosing best known option
             1 for choosing random options
+
+        num_traing_games: How many games should be spent traing
+        before utilizing optimal learned strategy
         """
         self.gamma = gamma
         self.epsilon = epsilon
         self._memory = np.array([])
         self._model = self._build_model()
+        self._num_training_games = num_training_games
+        self._max_memory_size = memory_size
         self._mem_index = 0
+
+        self._epsilon_decrement = epsilon / num_training_games
+
 
     def get_next_state(self, possible_next_states):
         if random.random() < self.epsilon:
@@ -44,6 +54,10 @@ class Agent():
         np.append(self._memory, (action, reward, is_game_over, self._mem_index))
         self._mem_index += 1
 
+        if self._mem_index > self._max_memory_size:
+            self._memory = self._memory[1:]
+            self._mem_index -= 1
+
     def _build_model(self):
         #TODO: Her initaliseres nettverket som skal vurdere hvor bra et flytt er
         # model = keras.Model(), model.Add()..., model.compile(), return model ish
@@ -52,6 +66,9 @@ class Agent():
 
     def train(self):
         #TODO: Her skal nettverket trenes etter hvert endte spill
+
+        self.epsilon -= self._epsilon_decrement
+
         sample_size = min(len(self._memory), 200) # Set sample_size to 200, or size of memory if len(memory) < 200
         sample = np.random.choice(self._memory, sample_size) # Train on a random sample of the memory
 
