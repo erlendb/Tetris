@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import keras
 
 class Agent():
 
@@ -22,40 +23,55 @@ class Agent():
         self.epsilon = epsilon
         self._memory = np.array([])
         self._model = self._build_model()
+        self._mem_index = 0
 
     def get_next_state(self, possible_next_states):
-        max_reward = None
-        best_state = None
-
         if random.random() < self.epsilon:
             return random.randint(0, len(possible_next_states)-1)
 
         else:
             best_reward = 0
             best_action = 0
-            for action, state in enumerate(possible_next_states):
+            for index, state in enumerate(possible_next_states):
                 predicted_reward = self._predict_reward(state)
                 if predicted_reward > best_reward:
                     best_reward = predicted_reward
-                    best_action = action
+                    best_action = index
 
         return best_action
 
-    def add_to_memory(self, action, reward):
-        np.append(self._memory, (action, reward))
+    def add_to_memory(self, action, reward, is_game_over):
+        np.append(self._memory, (action, reward, is_game_over, self._mem_index))
+        self._mem_index += 1
 
     def _build_model(self):
         #TODO: Her initaliseres nettverket som skal vurdere hvor bra et flytt er
         # model = keras.Model(), model.Add()..., model.compile(), return model ish
         return 0
 
-    def _train(self):
+
+    def train(self):
         #TODO: Her skal nettverket trenes etter hvert endte spill
         sample_size = min(len(self._memory), 200) # Set sample_size to 200, or size of memory if len(memory) < 200
-        sample = random.sample(self._memory, sample_size) # Train on a random sample of the memory
+        sample = np.random.choice(self._memory, sample_size) # Train on a random sample of the memory
 
         actions = np.array([episode[0] for episode in sample]) # X_values for network
-        q_values = None # Y_values for network
+
+        q_values = np.array([]) # Y_values for network
+        for episode in sample:
+            reward = episode[1]
+            is_game_over = episode[2]
+            index = episode[3]
+
+            if is_game_over:
+                np.append(q_values, reward)
+            else:
+                next_episode = self._memory[index + 1]
+                next_q = self._predict_reward(next_episode[0])
+                q_value = reward + self.gamma * next_q
+                np.append(q_values, q_value)
+
+        # self._model.fit(actions, q_values)
 
 
     def _predict_reward(self, possible_next_state):

@@ -18,10 +18,10 @@ for i in range(env.number_of_games):
         next_state_id = agt.get_next_state(possible_next_states)
         env.place_piece(possible_next_states[next_state_id][2])
         env.game.tick()
-        # env.game.print() #debugger
+        env.game.print() #debugger
         reward = env.get_reward()
-        agt.add_to_memory(possible_next_states[next_state_id][2], reward)
+        agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
     env.log_write()
     env.reset_game()
 
-# agent.train() ?
+    agt.train()
