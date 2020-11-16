@@ -2,8 +2,8 @@ import environment
 import agent
 from tetris import Piece, get_board_with_piece_matrix
 
-env = environment.Environment(number_of_games = 10)
-agt = agent.Agent()
+env = environment.Environment(number_of_games = 100)
+agt = agent.Agent(num_training_games = 100)
 for i in range(env.number_of_games):
     #env.game.print() #debugger
     print(env.game_iterator) #debugger

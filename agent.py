@@ -59,7 +59,7 @@ class Agent():
             best_reward = 0
             best_action = 0
             for index, state in enumerate(possible_next_states):
-                predicted_reward = self._predict_reward(state[0])
+                predicted_reward = self._predict_reward(state)
                 if predicted_reward > best_reward:
                     best_reward = predicted_reward
                     best_action = index
