@@ -82,8 +82,8 @@ class Agent():
         # model = keras.Model(), model.Add()..., model.compile(), return model ish
         # Første lag må ha
         model = Sequential()
-
-        model.add(Convolution2D(4, 1, 1, input_shape=(1, *self._state_size)))
+        
+        model.add(Convolution2D(4, 3, input_shape=(20, 10, 1))) #*self._state_size,
         model.add(Flatten())
         model.add(Dense(4, activation='relu'))
         model.add(Dense(1, activation='linear'))
@@ -101,7 +101,8 @@ class Agent():
         sample_size = min(len(self._memory), 200) # Set sample_size to 200, or size of memory if len(memory) < 200
         sample = random.sample(self._memory, sample_size) # Train on a random sample of the memory
 
-        actions = np.array( [np.array(episode[0]).reshape(-1, 1, 10, 20) for episode in sample] ) # X_values for network
+        actions = np.array( [np.array(episode[0]).reshape(20, 10) for episode in sample] ) # X_values for network
+        print(actions[0])
 
         q_values = np.array([]) # Y_values for network
         for episode in sample:
@@ -127,7 +128,8 @@ class Agent():
         output: Predicted Reward for the action
         """
         #TODO: Her skal nettverket brukes til å predikere hvor bra et enkelt flytt er
-        possible_next_state = np.array(possible_next_state).reshape(-1, 1,10,20)
+        possible_next_state = np.array(possible_next_state).reshape(20,10)
+        print(possible_next_state)
         return self._model.predict(possible_next_state)
 
     def save_model(self, filepath):
