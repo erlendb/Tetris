@@ -30,8 +30,9 @@ class Environment():
             reward = -10
         return reward
     
-    def log_write(self):
+    def log_write(self, epsilon):
         with open(self.log_file, 'a') as log:
             if self.game_iterator == 0:
-                log.write(f"\nTimestamp: {datetime.now()}\n")
-            log.write(f"Game number {self.game_iterator}, Rounds: {self.game.get_round_count()}, Score: {self.game_score}\n")
+                log.write(f"\n{datetime.now()}\n")
+                log.write(f"GameIterator Rounds Score Epsilon\n")
+            log.write(f"{self.game_iterator} {self.game.get_round_count()} {self.game_score} {epsilon}\n")

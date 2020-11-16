@@ -28,7 +28,7 @@ for i in range(env.number_of_games):
         #env.game.print() #debugger
         reward = env.get_reward()
         agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
-    env.log_write()
+    env.log_write(agt.epsilon)
     env.reset_game()
 
     agt.train()
