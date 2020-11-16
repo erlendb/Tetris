@@ -3,17 +3,18 @@ import agent
 from tetris import Piece, get_board_with_piece_matrix
 import sys
 
+###
 logstr = ''
-if len(sys.argv) > 1:
-    logstr = str(sys.argv[1])
+print_great_games = False
+number_of_training_games = 1
+number_of_games_total = number_of_training_games + 3
+load_model_name = '' # Leave blank ( '' ) if you want to build a new model
+save_model_name = 'model1'
+###
 
-
-print_great_games = True
 highest_score = 0
-
-num_training_games = 100
-agt = agent.Agent(num_training_games = num_training_games)
-env = environment.Environment(number_of_games = num_training_games + 20)
+agt = agent.Agent(num_training_games = number_of_training_games, saved_model_path = load_model_name)
+env = environment.Environment(number_of_games = number_of_games_total)
 for i in range(env.number_of_games):
     #env.game.print() #debugger
     print(env.game_iterator) #debugger
@@ -46,3 +47,5 @@ for i in range(env.number_of_games):
     env.reset_game()
 
     agt.train()
+
+agt.save_model(save_model_name)

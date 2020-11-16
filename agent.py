@@ -48,7 +48,7 @@ class Agent():
         self._epsilon_decrement = epsilon / num_training_games
 
         if saved_model_path:
-            self._model = keras.models.load_model(saved_model_path)
+            self._model = keras.models.load_model('models/' + saved_model_path)
         else:
             self._model = self._build_model()
 
@@ -132,4 +132,4 @@ class Agent():
         return self._model.predict([possible_next_state])
 
     def save_model(self, filepath):
-        self._model.save(filepath)
+        self._model.save('models/' + filepath)

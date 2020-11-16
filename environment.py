@@ -4,7 +4,7 @@ from datetime import datetime
 class Environment():
     def __init__(self, number_of_games = 1):
         self.game = tetris.Game()
-        self.log_file = 'log.txt'
+        self.log_file = 'logs/log.txt'
         self.number_of_games = number_of_games
         self.game_iterator = 0
         self.game_score = 0
