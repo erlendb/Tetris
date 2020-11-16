@@ -14,7 +14,8 @@ class Agent():
                 num_training_games=10000,
                 memory_size=5000,
                 board_size=(10, 20),
-                saved_model_path=""
+                saved_model_path="",
+                verbose=0
                 ):
 
         """
@@ -50,6 +51,8 @@ class Agent():
             self._model = keras.models.load_model(saved_model_path)
         else:
             self._model = self._build_model()
+            
+        self.verbose = verbose
 
     def get_next_state(self, possible_next_states):
         if random.random() < self.epsilon:
@@ -115,7 +118,7 @@ class Agent():
                 q_values = np.append(q_values, q_value)
 
         self._model.fit(actions, q_values,
-        batch_size=32, epochs=10, verbose=1)
+        batch_size=32, epochs=10, verbose=self.verbose)
 
 
     def _predict_reward(self, possible_next_state):
