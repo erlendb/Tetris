@@ -3,7 +3,10 @@ import random
 import time
 from copy import deepcopy
 
-
+def get_board_with_piece_matrix(board, piece):
+    _board = deepcopy(board)
+    _board.add_piece(piece)
+    return _board.matrix
 
 class Position():
     def __init__(self, x = -1, y = -1):
