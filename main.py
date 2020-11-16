@@ -1,6 +1,11 @@
 import environment
 import agent
 from tetris import Piece, get_board_with_piece_matrix
+import sys
+
+logstr = ''
+if len(sys.argv) > 1:
+    logstr = str(sys.argv[1])
 
 env = environment.Environment(number_of_games = 100)
 agt = agent.Agent(num_training_games = 100)
@@ -28,7 +33,7 @@ for i in range(env.number_of_games):
         #env.game.print() #debugger
         reward = env.get_reward()
         agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
-    env.log_write(agt.epsilon)
+    env.log_write(logstr, agt.epsilon)
     env.reset_game()
 
     agt.train()

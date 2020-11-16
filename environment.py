@@ -25,14 +25,16 @@ class Environment():
     
     def get_reward(self):
         popped_lines = self.game.get_popped_lines()
-        reward = 1 + popped_lines**2
+        reward = 1 + 10*popped_lines**2
         if self.game.is_game_over():
             reward = -10
         return reward
     
-    def log_write(self, epsilon):
+    def log_write(self, logstr, epsilon):
         with open(self.log_file, 'a') as log:
             if self.game_iterator == 0:
                 log.write(f"\n{datetime.now()}\n")
+                if logstr != '':
+                    log.write(f"{logstr}\n")
                 log.write(f"GameIterator Rounds Score Epsilon\n")
             log.write(f"{self.game_iterator} {self.game.get_round_count()} {self.game_score} {epsilon}\n")
