@@ -154,6 +154,8 @@ class Game():
                 if self.board.matrix[i][j] > 0:
                     break
             if j == self.board.width - 1:
+                if (len(self.get_possible_piece_placements()) == 0):
+                    return True
                 return False
         return True
 
