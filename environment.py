@@ -25,7 +25,7 @@ class Environment():
     
     def get_reward(self):
         popped_lines = self.game.get_popped_lines()
-        reward = 1 + 10*popped_lines**2
+        reward = 1 + popped_lines**2
         if self.game.is_game_over():
             reward = -10
         return reward
