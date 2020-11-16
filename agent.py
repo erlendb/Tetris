@@ -1,8 +1,9 @@
 import random
 import numpy as np
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Convolution2D, Dropout, Activation, Flatten
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import Dense, Convolution2D, Dropout, Activation, Flatten
 
 class Agent():
 
@@ -12,7 +13,8 @@ class Agent():
                 epsilon=1,
                 num_training_games=10000,
                 memory_size=5000,
-                board_size=(10, 20)
+                board_size=(10, 20),
+                saved_model_path=""
                 ):
 
         """
@@ -31,6 +33,8 @@ class Agent():
 
         board_size [tuple(x, y)]: dimension of tetris board matrix
 
+        saved_model_path: Path to a previously saved keras_model,
+        if blank a new model is created
         """
         self.gamma = gamma
         self.epsilon = epsilon
@@ -42,7 +46,10 @@ class Agent():
 
         self._epsilon_decrement = epsilon / num_training_games
 
-        self._model = self._build_model()
+        if saved_model_path:
+            self._model = keras.models.load_model(saved_model_path)
+        else:
+            self._model = self._build_model()
 
     def get_next_state(self, possible_next_states):
         if random.random() < self.epsilon:
@@ -120,3 +127,5 @@ class Agent():
         possible_next_state = np.array(possible_next_state).reshape(-1, 1,10,20)
         return self._model.predict(possible_next_state)
 
+    def save_model(self, filepath):
+        self._model.save(filepath)
