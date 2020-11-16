@@ -17,8 +17,8 @@ for i in range(env.number_of_games):
             possible_next_states.append((board, piece, piece_placement))
         next_state_id = agt.get_next_state(possible_next_states)
         env.place_piece(possible_next_states[next_state_id][2])
-        env.game.tick()
-        env.game.print() #debugger
+        env.tick()
+        #env.game.print() #debugger
         reward = env.get_reward()
         agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
     env.log_write()

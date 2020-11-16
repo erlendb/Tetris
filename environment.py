@@ -9,6 +9,10 @@ class Environment():
         self.game_iterator = 0
         self.game_score = 0
     
+    def tick(self):
+        self.game.tick()
+        self.game_score += self.get_reward()
+    
     def reset_game(self):
         self.game = tetris.Game()
         self.game_iterator += 1
