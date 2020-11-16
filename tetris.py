@@ -1,7 +1,9 @@
 import numpy
 import random
 import time
-from copy import deepcopy            
+from copy import deepcopy
+
+
 
 class Position():
     def __init__(self, x = -1, y = -1):
@@ -26,6 +28,18 @@ class Piece():
         while self.rotation < 0:
             self.rotation += 4
         self.matrix = self.rotated_matrices[self.rotation]
+    
+    def set_rotation(self, rotation):
+        self.rotation = rotation % 4
+        while self.rotation < 0:
+            self.rotation += 4
+        self.matrix = self.rotated_matrices[self.rotation]
+    
+    def set_position(self, x = None, y = None):
+        if x is not None:
+            self.position.x = x
+        if y is not None:
+            self.position.y = y
 
     def move_horizontally(self, movement):
         self.position.x += movement
