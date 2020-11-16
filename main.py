@@ -23,7 +23,7 @@ for i in range(env.number_of_games):
             state = get_board_with_piece_matrix(board, piece)
             possible_next_states.append(state)
         next_state_id = agt.get_next_state(possible_next_states)
-        env.place_piece(possible_next_states[next_state_id][2])
+        env.place_piece(possible_piece_placements[next_state_id])
         env.tick()
         #env.game.print() #debugger
         reward = env.get_reward()
