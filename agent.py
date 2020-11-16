@@ -2,8 +2,8 @@ import random
 import numpy as np
 
 from tensorflow import keras
-from keras.models import Sequential
-from keras.layers import Dense, Convolution2D, Dropout, Activation, Flatten
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Convolution2D, Dropout, Activation, Flatten
 
 class Agent():
 
@@ -51,7 +51,7 @@ class Agent():
             self._model = keras.models.load_model(saved_model_path)
         else:
             self._model = self._build_model()
-            
+
         self.verbose = verbose
 
     def get_next_state(self, possible_next_states):
@@ -82,7 +82,7 @@ class Agent():
         # model = keras.Model(), model.Add()..., model.compile(), return model ish
         # Første lag må ha
         model = Sequential()
-        
+
         model.add(Convolution2D(4, 3, input_shape=(20, 10, 1))) #*self._state_size,
         model.add(Flatten())
         model.add(Dense(4, activation='relu'))
@@ -102,8 +102,7 @@ class Agent():
         sample = random.sample(self._memory, sample_size) # Train on a random sample of the memory
 
         actions = np.array( [np.array(episode[0]).reshape(20, 10) for episode in sample] ) # X_values for network
-        print(actions[0])
-
+        actions = np.expand_dims(actions, axis=3)
         q_values = np.array([]) # Y_values for network
         for episode in sample:
             reward = episode[1]
@@ -119,7 +118,7 @@ class Agent():
                 q_values = np.append(q_values, q_value)
 
         self._model.fit(actions, q_values,
-        batch_size=32, epochs=10, verbose=self.verbose)
+        batch_size=sample_size, epochs=10, verbose=self.verbose)
 
 
     def _predict_reward(self, possible_next_state):
@@ -128,9 +127,9 @@ class Agent():
         output: Predicted Reward for the action
         """
         #TODO: Her skal nettverket brukes til å predikere hvor bra et enkelt flytt er
-        possible_next_state = np.array(possible_next_state).reshape(20,10)
-        print(possible_next_state)
-        return self._model.predict(possible_next_state)
+        possible_next_state = np.array(possible_next_state)
+        possible_next_state = np.expand_dims(possible_next_state, axis=(0, 3))
+        return self._model.predict([possible_next_state])
 
     def save_model(self, filepath):
         self._model.save(filepath)
