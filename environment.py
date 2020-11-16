@@ -25,8 +25,10 @@ class Environment():
     
     def get_reward(self):
         popped_lines = self.game.get_popped_lines()
-        return 1 + popped_lines**2
-        # if game over return -10
+        reward = 1 + popped_lines**2
+        if self.game.is_game_over():
+            reward = -10
+        return reward
     
     def log_write(self):
         with open(self.log_file, 'a') as log:
