@@ -6,18 +6,14 @@ import sys
 ###
 logstr = ''
 print_great_games = False
-number_of_training_games = 4000
-number_of_games_total = number_of_training_games + 500
+number_of_training_games = 1000
+number_of_games_total = number_of_training_games + 100
 load_model_name = '' # Leave blank ( '' ) if you want to build a new model
-save_model_name = 'model3-natt'
+save_model_name = 'model1'
 ###
 
-
-print_great_games = True
-
-num_training_games = 1000
 agt = agent.Agent(num_training_games = num_training_games)
-env = environment.Environment(number_of_games = num_training_games + 20)
+env = environment.Environment(number_of_games = number_of_games_total)
 for i in range(env.number_of_games):
     #env.game.print() #debugger
     print(env.game_iterator) #debugger
