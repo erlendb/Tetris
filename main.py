@@ -12,7 +12,7 @@ load_model_name = '' # Leave blank ( '' ) if you want to build a new model
 save_model_name = 'model1'
 ###
 
-agt = agent.Agent(num_training_games = num_training_games)
+agt = agent.Agent(num_training_games = number_of_training_games)
 env = environment.Environment(number_of_games = number_of_games_total)
 for i in range(env.number_of_games):
     #env.game.print() #debugger
