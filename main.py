@@ -5,7 +5,6 @@ import sys
 
 ###
 logstr = ''
-print_great_games = False
 number_of_training_games = 1000
 number_of_games_total = number_of_training_games + 100
 load_model_name = '' # Leave blank ( '' ) if you want to build a new model
@@ -35,12 +34,7 @@ for i in range(env.number_of_games):
         next_state_id = agt.get_next_state(possible_next_states)
         env.place_piece(possible_piece_placements[next_state_id])
         env.tick()
-
         reward = env.get_reward()
-        if print_great_games and env.game.is_game_over() and env.game_score > env.game.round_count - 10:
-            env.game.print()
-            print("score =", env.game_score)
-
         agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
     env.log_write(logstr, agt.epsilon)
     env.reset_game()
