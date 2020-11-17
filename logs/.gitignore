@@ -1,0 +1,3 @@
+# Index the example log in git
+!.gitignore
+!example-model.txt

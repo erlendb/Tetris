@@ -1,3 +1,3 @@
 # Index the example model in git
 !.gitignore
-!example-model.txt.png
+!example-model
