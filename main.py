@@ -6,10 +6,10 @@ import sys
 ###
 logstr = ''
 print_great_games = False
-number_of_training_games = 1
-number_of_games_total = number_of_training_games + 3
+number_of_training_games = 4000
+number_of_games_total = number_of_training_games + 500
 load_model_name = '' # Leave blank ( '' ) if you want to build a new model
-save_model_name = 'model1'
+save_model_name = 'model3-natt'
 ###
 
 highest_score = 0
