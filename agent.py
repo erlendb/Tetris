@@ -95,8 +95,11 @@ class Agent():
 
     def train(self):
         #TODO: Her skal nettverket trenes etter hvert endte spill
-
-        self.epsilon -= self._epsilon_decrement
+        
+        if self.epsilon > 0:
+            self.epsilon -= self._epsilon_decrement
+        else:
+            self.epsilon = 0
 
         sample_size = min(len(self._memory), 200) # Set sample_size to 200, or size of memory if len(memory) < 200
         sample = random.sample(self._memory, sample_size) # Train on a random sample of the memory
