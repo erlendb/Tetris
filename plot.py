@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 
-log_file_name = 'log.txt' # Plot this file
+log_file_name = 'model1.txt' # Plot this file
 
 input_log_file = 'logs/' + log_file_name
 output_plot_file = 'plots/' + log_file_name + '.png'
 
-data_starts_at_line = 4
+data_starts_at_line = 5
 header_line = data_starts_at_line - 1
 
 file = open(input_log_file, 'r')
