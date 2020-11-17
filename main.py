@@ -8,13 +8,16 @@ logstr = ''
 print_great_games = False
 number_of_training_games = 1
 number_of_games_total = number_of_training_games + 3
-load_model_name = '' # Leave blank ( '' ) if you want to build a new model
-save_model_name = 'model1'
+load_model_name = 'model_BK' # Leave blank ( '' ) if you want to build a new model
+save_model_name = 'model_BK'
 ###
 
-highest_score = 0
-agt = agent.Agent(num_training_games = number_of_training_games, saved_model_path = load_model_name)
-env = environment.Environment(number_of_games = number_of_games_total)
+
+print_great_games = True
+
+num_training_games = 1000
+agt = agent.Agent(num_training_games = num_training_games)
+env = environment.Environment(number_of_games = num_training_games + 20)
 for i in range(env.number_of_games):
     #env.game.print() #debugger
     print(env.game_iterator) #debugger
@@ -22,7 +25,7 @@ for i in range(env.number_of_games):
         board = env.game.board
         piece_matrix = env.game.get_piece()
         piece = Piece(piece_matrix)
-        
+
         possible_piece_placements = env.game.get_possible_piece_placements()
         #for p in possible_piece_placements: #debugger
         #    print(p) #debugger
@@ -36,12 +39,12 @@ for i in range(env.number_of_games):
         next_state_id = agt.get_next_state(possible_next_states)
         env.place_piece(possible_piece_placements[next_state_id])
         env.tick()
-        
+
         reward = env.get_reward()
-        if print_great_games and env.game.is_game_over() and env.game_score > highest_score:
-            highest_score = env.game_score
+        if print_great_games and env.game.is_game_over() and env.game_score > env.game.round_count - 10:
             env.game.print()
-        
+            print("score =", env.game_score)
+
         agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
     env.log_write(logstr, agt.epsilon)
     env.reset_game()

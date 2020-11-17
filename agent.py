@@ -13,7 +13,7 @@ class Agent():
                 epsilon=1,
                 num_training_games=10000,
                 memory_size=5000,
-                board_size=(10, 20),
+                board_size=(20, 10),
                 saved_model_path="",
                 verbose=0
                 ):
@@ -83,7 +83,7 @@ class Agent():
         # Første lag må ha
         model = Sequential()
 
-        model.add(Convolution2D(4, 3, input_shape=(20, 10, 1))) #*self._state_size,
+        model.add(Convolution2D(4, 3, input_shape=(*self._state_size, 1))) #*self._state_size,
         model.add(Flatten())
         model.add(Dense(4, activation='relu'))
         model.add(Dense(1, activation='linear'))
@@ -101,7 +101,7 @@ class Agent():
         sample_size = min(len(self._memory), 200) # Set sample_size to 200, or size of memory if len(memory) < 200
         sample = random.sample(self._memory, sample_size) # Train on a random sample of the memory
 
-        actions = np.array( [np.array(episode[0]).reshape(20, 10) for episode in sample] ) # X_values for network
+        actions = np.array( [np.array(episode[0]).reshape(self._state_size) for episode in sample] ) # X_values for network
         actions = np.expand_dims(actions, axis=3)
         q_values = np.array([]) # Y_values for network
         for episode in sample:
@@ -109,7 +109,7 @@ class Agent():
             is_game_over = episode[2]
             index = episode[3]
 
-            if is_game_over:
+            if is_game_over or index >= self._max_memory_size - 1:
                 q_values = np.append(q_values, reward)
             else:
                 next_episode = self._memory[index + 1]
@@ -118,7 +118,8 @@ class Agent():
                 q_values = np.append(q_values, q_value)
 
         self._model.fit(actions, q_values,
-        batch_size=sample_size, epochs=10, verbose=self.verbose)
+        batch_size=sample_size, epochs=100, verbose=self.verbose
+        )
 
 
     def _predict_reward(self, possible_next_state):
