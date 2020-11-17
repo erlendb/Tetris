@@ -1,0 +1,8 @@
+Model name: 1605634634.0566442example-model
+Extra information: 
+Timestamp: 2020-11-17 18:37:17.517859
+Game Rounds Score Epsilon
+0 28 17 1
+1 17 6 0.5
+2 24 13 0.0
+3 21 10 0
