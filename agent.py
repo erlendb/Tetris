@@ -14,7 +14,7 @@ class Agent():
                 num_training_games=10000,
                 memory_size=5000,
                 board_size=(20, 10),
-                saved_model_path="",
+                saved_model_name="",
                 verbose=0
                 ):
 
@@ -34,7 +34,7 @@ class Agent():
 
         board_size [tuple(x, y)]: dimension of tetris board matrix
 
-        saved_model_path: Path to a previously saved keras_model,
+        saved_model_name: Path to a previously saved keras_model,
         if blank a new model is created
         """
         self.gamma = gamma
@@ -47,8 +47,8 @@ class Agent():
 
         self._epsilon_decrement = epsilon / num_training_games
 
-        if saved_model_path:
-            self._model = keras.models.load_model('models/' + saved_model_path)
+        if saved_model_name:
+            self._model = keras.models.load_model('models/' + saved_model_name)
         else:
             self._model = self._build_model()
 
@@ -132,5 +132,5 @@ class Agent():
         possible_next_state = np.expand_dims(possible_next_state, axis=(0, 3))
         return self._model.predict([possible_next_state])
 
-    def save_model(self, filepath):
-        self._model.save('models/' + filepath)
+    def save_model(self, model_name):
+        self._model.save('models/' + model_name)
