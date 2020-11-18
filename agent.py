@@ -12,7 +12,7 @@ class Agent():
                 gamma=0.9,
                 epsilon=1,
                 num_training_games=10000,
-                memory_size=5000,
+                memory_size=500,
                 board_size=(20, 10),
                 saved_model_name="",
                 verbose=0
@@ -63,15 +63,18 @@ class Agent():
             return random.randint(0, len(possible_next_states)-1)
 
         else:
-            best_reward = 0
-            best_action = 0
-            for index, state in enumerate(possible_next_states):
-                predicted_reward = self._predict_reward(state)
-                if predicted_reward > best_reward:
-                    best_reward = predicted_reward
-                    best_action = index
+            # best_reward = 0
+            # best_action = 0
+            predicted_rewards = self._predict_reward(possible_next_states)
 
-        return best_action
+            return np.argmax(predicted_rewards)
+        #     for index, state in enumerate(possible_next_states):
+        #         predicted_reward = self._predict_reward(state)
+        #         if predicted_reward > best_reward:
+        #             best_reward = predicted_reward
+        #             best_action = index
+
+        # return best_action
 
     def add_to_memory(self, action, reward, is_game_over):
         """
@@ -112,10 +115,10 @@ class Agent():
         else:
             self.epsilon = 0
 
-        sample_size = 200 # Set sample_size to 200
+        sample_size = 50 # Set sample_size to 200
 
         if not self._filled_memory:
-            sample_size = self._mem_index
+            sample_size = min(self._mem_index, sample_size)
             mem_upper_limit = self._mem_index
         else:
             mem_upper_limit = self._max_memory_size
@@ -139,7 +142,7 @@ class Agent():
             if is_game_over:
                 q_values = np.append(q_values, reward)
             else:
-                next_episode = self._memory[index + 1 % self._max_memory_size]
+                next_episode = self._memory[(index + 1) % self._max_memory_size]
                 next_q = self._predict_reward(next_episode[0])
                 q_value = reward + self.gamma * next_q
                 q_values = np.append(q_values, q_value)
@@ -156,7 +159,9 @@ class Agent():
         """
         #TODO: Her skal nettverket brukes til å predikere hvor bra et enkelt flytt er
         possible_next_state = np.array(possible_next_state)
-        possible_next_state = np.expand_dims(possible_next_state, axis=(0, 3))
+        if len(possible_next_state.shape) == 2:
+            possible_next_state = np.expand_dims(possible_next_state, axis=0)
+        possible_next_state = np.expand_dims(possible_next_state, axis=3)
         return self._model.predict([possible_next_state])
 
     def save_model(self, model_name):
