@@ -6,15 +6,18 @@ class Environment():
         self.game = tetris.Game()
         self.number_of_games = number_of_games
         self.game_iterator = 0
+        self.game_cleared_lines = 0
         self.game_score = 0
     
     def tick(self):
         self.game.tick()
+        self.game_cleared_lines += self.game.get_popped_lines()
         self.game_score += self.get_reward()
     
     def reset_game(self):
         self.game = tetris.Game()
         self.game_iterator += 1
+        self.game_cleared_lines = 0
         self.game_score = 0
         
     def place_piece(self, placement):
@@ -36,5 +39,5 @@ class Environment():
                 log.write(f"Model name: {model_name}\n")
                 log.write(f"Extra information: {extra_information}\n")
                 log.write(f"Timestamp: {datetime.now()}\n")
-                log.write(f"Game Rounds Score Epsilon\n")
-            log.write(f"{self.game_iterator} {self.game.get_round_count()} {self.game_score} {epsilon}\n")
+                log.write(f"Game Rounds Score Epsilon ClearedLines\n")
+            log.write(f"{self.game_iterator} {self.game.get_round_count()} {self.game_score} {epsilon} {self.game_cleared_lines}\n")
