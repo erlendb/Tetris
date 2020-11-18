@@ -8,7 +8,7 @@ timestamp = str(time.time())
 model_name = timestamp + 'model1' # Name of the output log file and the output model files. NB: if model_name is the same as an existing model/log, the existing files will be overwritten!
 log_extra_information = '' # Extra information to put in the log file
 load_model_name = '' # Name of the model you want to load. Leave blank if you want to build a new model.
-number_of_training_games = 2 # Games where the epsilon goes from 1 to 0.
+number_of_training_games = 1000 # Games where the epsilon goes from 1 to 0.
 number_of_games_total = number_of_training_games + 2 # If this is higher than number_of_training_games, then the last games will be run with epsilon 0 (always use the moves with the best reward)
 ###
 
@@ -37,11 +37,14 @@ for i in range(env.number_of_games):
         env.tick()
         reward = env.get_reward()
         agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
+        if i % 50 == 0:
+            env.game.print()
+            print(f"Score: {env.game_score}")
     env.log_write(model_name = model_name, extra_information = log_extra_information, epsilon = agt.epsilon)
     env.reset_game()
 
     agt.train()
-    
+
     if (i % 100) == 0:
         agt.save_model(model_name)
 
