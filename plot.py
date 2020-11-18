@@ -61,7 +61,7 @@ max_score = max(score)
 min_epsilon = 0
 max_epsilon = 1
 min_cleared_lines = 0
-max_cleared_lines = max(cleared_lines)
+max_cleared_lines = max(1, max(cleared_lines))
 
 fig = plt.figure()
 host = fig.add_subplot(111)
