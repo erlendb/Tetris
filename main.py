@@ -36,11 +36,12 @@ for i in range(env.number_of_games):
         env.place_piece(possible_piece_placements[next_state_id])
         env.tick()
         reward = env.get_reward()
-        agt.add_to_memory(possible_next_states[next_state_id], reward, env.game.is_game_over())
+        agt.add_to_memory(possible_next_states[next_state_id], reward)
     env.log_write(model_name = model_name, extra_information = log_extra_information, epsilon = agt.epsilon)
     env.reset_game()
 
     agt.train()
+    agt.clear_memory()
     
     if (i % 100) == 0:
         agt.save_model(model_name)

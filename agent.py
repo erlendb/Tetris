@@ -12,7 +12,6 @@ class Agent():
                 gamma=0.9,
                 epsilon=1,
                 num_training_games=10000,
-                memory_size=5000,
                 board_size=(20, 10),
                 saved_model_name="",
                 verbose=0
@@ -41,8 +40,6 @@ class Agent():
         self.epsilon = epsilon
         self._memory = []
         self._num_training_games = num_training_games
-        self._max_memory_size = memory_size
-        self._mem_index = 0
         self._state_size = board_size
 
         self._epsilon_decrement = epsilon / num_training_games
@@ -69,15 +66,11 @@ class Agent():
 
         return best_action
 
-    def add_to_memory(self, action, reward, is_game_over):
-        if reward == 1:
-            return
-        self._memory.append([action, reward, is_game_over, self._mem_index])
-        self._mem_index += 1
-
-        if self._mem_index > self._max_memory_size:
-            self._memory = self._memory[1:]
-            self._mem_index -= 1
+    def add_to_memory(self, action, reward):
+        self._memory.append([action, reward])
+    
+    def clear_memory(self):
+        self._memory = []
 
     def _build_model(self):
         #TODO: Her initaliseres nettverket som skal vurdere hvor bra et flytt er
@@ -103,27 +96,25 @@ class Agent():
         else:
             self.epsilon = 0
 
-        sample_size = min(len(self._memory), 200) # Set sample_size to 200, or size of memory if len(memory) < 200
-        sample = random.sample(self._memory, sample_size) # Train on a random sample of the memory
+        sample = self._memory
+        sample_size = len(sample)
 
         actions = np.array( [np.array(episode[0]).reshape(self._state_size) for episode in sample] ) # X_values for network
         actions = np.expand_dims(actions, axis=3)
         q_values = np.array([]) # Y_values for network
-        for episode in sample:
-            reward = episode[1]
-            is_game_over = episode[2]
-            index = episode[3]
+        for index in range(0, len(sample)):
+            reward = sample[index][1]
 
-            if is_game_over or index >= self._max_memory_size - 1:
+            if index == len(sample) - 1:
                 q_values = np.append(q_values, reward)
             else:
-                next_episode = self._memory[index + 1]
+                next_episode = sample[index + 1]
                 next_q = self._predict_reward(next_episode[0])
                 q_value = reward + self.gamma * next_q
                 q_values = np.append(q_values, q_value)
 
         self._model.fit(actions, q_values,
-        batch_size=sample_size, epochs=100, verbose=self.verbose
+        batch_size=sample_size, epochs=10, verbose=self.verbose
         )
 
 
