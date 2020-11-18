@@ -6,6 +6,7 @@ import numpy as np
 log_file_name = '1605696464.7455516-tester-pr-agent.txt' # Plot this file
 plot_title = u'Tetris med trening på bare siste spill'
 subtitle = True
+plot_until_index = 1000 # Last index of the data you want to plot. -1 for plotting the whole dataset
 
 input_log_file = 'logs/' + log_file_name
 output_plot_file = 'plots/' + log_file_name + '.png'
@@ -22,6 +23,8 @@ data = []
 for index, line in enumerate(lines):
     if index < data_starts_at_line - 1:
         continue
+    if plot_until_index != -1 and index >= plot_until_index + data_starts_at_line:
+        break
     data.append(line.split())
 
 #print(header)
