@@ -46,4 +46,4 @@ for i in range(env.number_of_games):
     if (i % 100) == 0:
         agt.save_model(model_name)
 
-agt.save_model(model_name)
+agt.save_model(model_name, should_plot_model = True)
