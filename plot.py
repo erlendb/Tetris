@@ -39,7 +39,7 @@ for i, d in enumerate(data):
     score.append( int(data[i][2]) )
     epsilon.append( float(data[i][3]) )
     if (len(data[1]) > 4):
-        cleared_lines.append( float(data[i][4]) )
+        cleared_lines.append( int(data[i][4]) )
     else:
         #cleared_lines.append(0)
         cl = int(data[i][2]) - int(data[i][1]) + 10 + 1
