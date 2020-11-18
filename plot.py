@@ -5,7 +5,7 @@ import numpy as np
 
 log_file_name = '1605696464.7455516-tester-pr-agent.txt' # Plot this file
 plot_title = u'Tetris med trening på bare siste spill'
-subtitle = False
+subtitle = True
 
 input_log_file = 'logs/' + log_file_name
 output_plot_file = 'plots/' + log_file_name + '.png'
@@ -41,7 +41,9 @@ for i, d in enumerate(data):
     if (len(data[1]) > 4):
         cleared_lines.append( float(data[i][4]) )
     else:
-        cleared_lines.append(0)
+        #cleared_lines.append(0)
+        cl = int(data[i][2]) - int(data[i][1]) + 10 + 1
+        cleared_lines.append(cl)
 
 #print(game)
 #print(rounds)
@@ -68,7 +70,7 @@ host.set_xlim(0, number_of_games)
 host.set_ylim(min_rounds, max_rounds)
 par1.set_ylim(min_score, max_score)
 par2.set_ylim(min_epsilon, max_epsilon)
-par3.set_ylim(min_cleared_lines, max_cleared_lines + 1)
+par3.set_ylim(min_cleared_lines, max_cleared_lines)
 
 fig.suptitle(plot_title)
 if subtitle:
@@ -100,7 +102,7 @@ par1.plot(game, score_trend(game), color=color2)
 
 cleared_lines_polyfit = np.polyfit(game, cleared_lines, 1)
 cleared_lines_trend = np.poly1d(cleared_lines_polyfit)
-par1.plot(game, cleared_lines_trend(game), color=color4)
+#par1.plot(game, cleared_lines_trend(game), color=color4)
 
 lns = [p1, p2, p3, p4]
 host.legend(handles=lns, loc='best')
