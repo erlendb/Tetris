@@ -77,7 +77,7 @@ par3.set_ylim(min_cleared_lines, max_cleared_lines)
 
 fig.suptitle(plot_title)
 if subtitle:
-    host.set_title("Games: " + str(max(game)))
+    host.set_title("Games: " + str(len(game)))
 
 host.set_xlabel("Game number")
 host.set_ylabel("Rounds")
