@@ -138,4 +138,6 @@ class Agent():
         return self._model.predict([possible_next_state])
 
     def save_model(self, model_name):
-        self._model.save('models/' + model_name)
+        print("Saving model...")
+        self._model.save(filepath = 'models/' + model_name, overwrite = True)
+        print("Saved.")

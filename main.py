@@ -41,5 +41,8 @@ for i in range(env.number_of_games):
     env.reset_game()
 
     agt.train()
+    
+    if (i % 100) == 0:
+        agt.save_model(model_name)
 
 agt.save_model(model_name)
