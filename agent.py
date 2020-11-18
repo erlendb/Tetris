@@ -16,7 +16,8 @@ class Agent():
                 memory_size=500,
                 board_size=(20, 10),
                 saved_model_name="",
-                verbose=0
+                verbose=0,
+                epsilon_decrement = True
                 ):
 
         """
@@ -50,8 +51,11 @@ class Agent():
         empty_board_matrix = [[0 for _ in range(board_size[0])] for _ in range(board_size[1])]
         self._memory = np.array([[empty_board_matrix, 0] for _ in range(memory_size)], dtype=object)
         self._filled_memory = False
-
-        self._epsilon_decrement = epsilon / num_training_games
+        
+        if epsilon_decrement:
+            self._epsilon_decrement = epsilon / num_training_games
+        else:
+            self._epsilon_decrement = 0
 
         if saved_model_name:
             self._model = keras.models.load_model('models/' + saved_model_name)
