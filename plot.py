@@ -92,17 +92,17 @@ p2, = par1.plot(game, score, '.', color=color2, label="Score")
 p3, = par2.plot(game, epsilon, color=color3, label="Epsilon")
 p4, = par3.plot(game, cleared_lines, '.', color=color4, label="Cleared lines")
 
-rounds_polyfit = np.polyfit(game, rounds, 1)
+rounds_polyfit = np.polyfit(game, rounds, 3)
 rounds_trend = np.poly1d(rounds_polyfit)
 host.plot(game, rounds_trend(game), color=color1)
 
-score_polyfit = np.polyfit(game, score, 1)
+score_polyfit = np.polyfit(game, score, 3)
 score_trend = np.poly1d(score_polyfit)
 par1.plot(game, score_trend(game), color=color2)
 
-cleared_lines_polyfit = np.polyfit(game, cleared_lines, 1)
+cleared_lines_polyfit = np.polyfit(game, cleared_lines, 3)
 cleared_lines_trend = np.poly1d(cleared_lines_polyfit)
-#par1.plot(game, cleared_lines_trend(game), color=color4)
+par3.plot(game, cleared_lines_trend(game), color=color4)
 
 lns = [p1, p2, p3, p4]
 host.legend(handles=lns, loc='best')
