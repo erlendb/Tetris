@@ -4,6 +4,7 @@ import numpy as np
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Convolution2D, Dropout, Activation, Flatten
+from tensorflow.keras.utils import plot_model
 
 class Agent():
 
@@ -95,6 +96,7 @@ class Agent():
         # Første lag må ha
         model = Sequential()
 
+        model.add(Convolution2D(8, 4, input_shape=(*self._state_size, 1))) #*self._state_size,
         model.add(Convolution2D(4, 3, input_shape=(*self._state_size, 1))) #*self._state_size,
         model.add(Flatten())
         model.add(Dense(4, activation='relu'))
@@ -157,14 +159,17 @@ class Agent():
         input: list of feature_values for current and next state
         output: Predicted value for the action
         """
-        #TODO: Her skal nettverket brukes til å predikere hvor bra et enkelt flytt er
         possible_next_state = np.array(possible_next_state)
         if len(possible_next_state.shape) == 2:
-            possible_next_state = np.expand_dims(possible_next_state, axis=0)
-        possible_next_state = np.expand_dims(possible_next_state, axis=3)
+            possible_next_state = np.expand_dims(possible_next_state, axis=0) # Legg til en akse for antall inputs (1)
+        possible_next_state = np.expand_dims(possible_next_state, axis=3) # Legg til en akse for bitdybde (1)
         return self._model.predict([possible_next_state])
 
     def save_model(self, model_name):
         print("Saving model...")
         self._model.save(filepath = 'models/' + model_name, overwrite = True)
+        try:
+            plot_model(self._model, to_file='models/visualizations/' + model_name+ '.png', show_shapes=True, show_layer_names=True)
+        except Exception as e:
+            print(f"Error in plot model: {e}. \n You can probably fix it by doing 'pip install pydot' and 'sudo apt install graphviz'")
         print("Saved.")
