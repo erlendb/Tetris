@@ -1,6 +1,11 @@
-import matplotlib.pyplot as plt
+# coding=utf-8
 
-log_file_name = 'model1.txt' # Plot this file
+import matplotlib.pyplot as plt
+import numpy as np
+
+log_file_name = '1605696464.7455516-tester-pr-agent.txt' # Plot this file
+plot_title = u'Tetris med trening på bare siste spill'
+subtitle = False
 
 input_log_file = 'logs/' + log_file_name
 output_plot_file = 'plots/' + log_file_name + '.png'
@@ -56,6 +61,11 @@ host.set_ylim(min_rounds, max_rounds)
 par1.set_ylim(min_score, max_score)
 par2.set_ylim(min_epsilon, max_epsilon)
 
+fig.suptitle(plot_title)
+if subtitle:
+    host.set_title("Games: " + str(max(game)))
+
+host.set_xlabel("Game number")
 host.set_ylabel("Rounds")
 par1.set_ylabel("Score")
 par2.set_ylabel("Epsilon")
@@ -64,9 +74,17 @@ color1 = plt.cm.viridis(0)
 color2 = plt.cm.viridis(0.5)
 color3 = plt.cm.viridis(.9)
 
-p1, = host.plot(game, rounds, color=color1,label="Rounds")
-p2, = par1.plot(game, score, color=color2, label="Score")
+p1, = host.plot(game, rounds, '.', color=color1,label="Rounds")
+p2, = par1.plot(game, score, '.', color=color2, label="Score")
 p3, = par2.plot(game, epsilon, color=color3, label="Epsilon")
+
+rounds_polyfit = np.polyfit(game, rounds, 1)
+rounds_trend = np.poly1d(rounds_polyfit)
+host.plot(game, rounds_trend(game), color=color1)
+
+score_polyfit = np.polyfit(game, score, 1)
+score_trend = np.poly1d(score_polyfit)
+par1.plot(game, score_trend(game), color=color2)
 
 lns = [p1, p2, p3]
 host.legend(handles=lns, loc='best')
@@ -75,6 +93,7 @@ host.legend(handles=lns, loc='best')
 par2.spines['right'].set_position(('outward', 60))
 
 par2.xaxis.set_ticks(game)
+plt.locator_params(axis='x', nbins=5)
 
 # Sometimes handy, same for xaxis
 #par2.yaxis.set_ticks_position('right')
