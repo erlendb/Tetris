@@ -70,6 +70,8 @@ class Agent():
         return best_action
 
     def add_to_memory(self, action, reward, is_game_over):
+        if reward == 1:
+            return
         self._memory.append([action, reward, is_game_over, self._mem_index])
         self._mem_index += 1
 
