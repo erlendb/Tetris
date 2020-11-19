@@ -31,13 +31,13 @@ class Piece():
         while self.rotation < 0:
             self.rotation += 4
         self.matrix = self.rotated_matrices[self.rotation]
-    
+
     def set_rotation(self, rotation):
         self.rotation = rotation % 4
         while self.rotation < 0:
             self.rotation += 4
         self.matrix = self.rotated_matrices[self.rotation]
-    
+
     def set_position(self, x = None, y = None):
         if x is not None:
             self.position.x = x
@@ -89,11 +89,11 @@ class Game():
         self.set_piece(random.randrange(len(self.pieces)))
         self.reset_piece_position()
         self.set_next_piece_id(random.randrange(len(self.pieces)))
-        
+
         self.tick_count = 0
         self.round_count = 0
         self.popped_lines = 0
-        
+
         self.placed_position = Position()
         self.placed_rotation = 0
 
@@ -203,7 +203,7 @@ class Game():
 
     def get_placed_rotation(self):
         return self.placed_rotation
-        
+
     def get_number_of_holes(self):
         number_of_holes = 0
         for j in range(self.board.width):
@@ -228,10 +228,10 @@ class Game():
 
     def get_piece_position(self):
         return self.piece.position.x, self.piece.position.y
-        
+
     def get_piece_rotation(self):
         return self.piece.rotation
-    
+
     def get_possible_piece_placements(self):
         possible_piece_placements = []
         game = deepcopy(self)
@@ -242,7 +242,7 @@ class Game():
                     continue
                 game.set_piece_position(x = xpos)
                 game.move_piece_down_until_not_allowed()
-                
+
                 possible_piece_placements.append((game.get_piece_position(), game.get_piece_rotation()))
                 game.reset_piece_position()
         return possible_piece_placements
@@ -259,7 +259,7 @@ class Game():
     def set_piece(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
             self.piece = deepcopy(self.pieces[piece_id])
-            
+
     def set_next_piece_id(self, piece_id):
         if piece_id >= 0 and piece_id < len(self.pieces):
             self.next_piece_id = piece_id

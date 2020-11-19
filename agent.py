@@ -3,7 +3,7 @@ import numpy as np
 
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Convolution2D, Dropout, Activation, Flatten
+from tensorflow.keras.layers import Dense, Convolution2D, Dropout, Activation, Flatten, Input
 from tensorflow.keras.utils import plot_model
 
 class Agent():
@@ -48,10 +48,12 @@ class Agent():
         self.verbose = verbose
 
         # Memory saves episodes in form [board_matrix, reward (int)]
-        empty_board_matrix = [[0 for _ in range(board_size[0])] for _ in range(board_size[1])]
-        self._memory = np.array([[empty_board_matrix, 0] for _ in range(memory_size)], dtype=object)
+        # empty_board_matrix = [[0 for _ in range(board_size[0])] for _ in range(board_size[1])]
+        # np.array([[np.array([0, 0, 0]), 0, False] for _ in range(memory_size)], dtype=object)
+        self._memory_actions = np.zeros((memory_size, 3))
+        self._memory_rewards = np.array([[0, False] for _ in range(memory_size)], dtype=object)
         self._filled_memory = False
-        
+
         if epsilon_decrement:
             self._epsilon_decrement = epsilon / num_training_games
         else:
@@ -62,6 +64,7 @@ class Agent():
         else:
             self._model = self._build_model()
 
+
     def get_next_state(self, possible_next_states):
         if random.random() < self.epsilon:
             return random.randint(0, len(possible_next_states)-1)
@@ -69,17 +72,20 @@ class Agent():
             predicted_rewards = self._predict_rewards(possible_next_states)
             return np.argmax(predicted_rewards)
 
-    def add_to_memory(self, action, reward):
+
+    def add_to_memory(self, action, reward, is_game_over):
         """
         Save an action and related reward to agents memory
         """
 
-        self._memory[self._mem_index] = [action, reward]
+        self._memory_actions[self._mem_index] = np.array(action)
+        self._memory_rewards[self._mem_index] = [reward, is_game_over]
         self._mem_index += 1
         if self._mem_index >= self._max_memory_size:
             self._mem_index %= self._max_memory_size
             self._filled_memory = True
-    
+
+
     def clear_memory(self):
         self._filled_memory = False
         self._mem_index = 0
@@ -92,11 +98,12 @@ class Agent():
         # Første lag må ha
         model = Sequential()
 
-        #model.add(Convolution2D(8, 4, input_shape=(*self._state_size, 1)))
-        model.add(Convolution2D(4, 3, input_shape=(*self._state_size, 1)))
-        model.add(Flatten())
-        model.add(Dense(4, activation='relu'))
+        model.add(Input(shape=(3,)))
+        model.add(Dense(32, activation='relu'))
+        model.add(Dense(32, activation='relu'))
+
         model.add(Dense(1, activation='linear'))
+
 
         model.compile(optimizer="adam", loss='mse')
 
@@ -112,30 +119,37 @@ class Agent():
         else:
             self.epsilon = 0
 
-        if self._filled_memory:
-            sample_size = self._max_memory_size
+        sample_size = 50 # Set sample_size to 50
+
+        if not self._filled_memory:
+            sample_size = min(self._mem_index, sample_size)
+            mem_upper_limit = self._mem_index
         else:
-            sample_size = self._mem_index
-        
-        sample = self._memory[:sample_size]
+            mem_upper_limit = self._max_memory_size
 
-        actions = np.array( [np.array(episode[0]).reshape(self._state_size) for episode in sample] ) # X_values for network
-        actions = np.expand_dims(actions, axis=3)
-        
+        rewards_absvalue = np.abs(self._memory_rewards[:mem_upper_limit, 0])
+        sample_probs = rewards_absvalue / sum(rewards_absvalue) # Normalize rewards to use as probability for choosing episode
+        sample_probs = sample_probs.astype(np.float)
+
+        sample_idx = np.random.choice(mem_upper_limit, sample_size, p=sample_probs, replace=False)
+        sample_rewards = self._memory_rewards[sample_idx] # Use a random sample of the network for training
+        actions = self._memory_actions[sample_idx] # Use a random sample of the network for training
+
         q_values = np.array([]) # Y_values for network
-        for index in range(0, sample_size):
-            reward = sample[index][1]
+        for episode, index in zip(sample_rewards, sample_idx):
+            reward = episode[0]
+            is_game_over = episode[1]
 
-            if index == self._mem_index - 1: # Last piece placement in the game. This is clearly a game over-placement
+            if is_game_over:
                 q_values = np.append(q_values, reward)
             else:
-                next_episode = sample[(index + 1) % self._max_memory_size]
-                next_q = self._predict_rewards(next_episode[0])
+                next_action = self._memory_actions[(index + 1) % self._max_memory_size]
+                next_q = self._predict_rewards(next_action)
                 q_value = reward + self.gamma * next_q
                 q_values = np.append(q_values, q_value)
 
         self._model.fit(actions, q_values,
-        batch_size=sample_size, epochs=10, verbose=self.verbose
+        batch_size=sample_size, epochs=100, verbose=self.verbose
         )
 
     def _predict_rewards(self, possible_next_states):
@@ -143,11 +157,11 @@ class Agent():
         input: list of actions
         output: Predicted values for the actions
         """
-        possible_next_states = np.array(possible_next_states)
-        if len(possible_next_states.shape) == 2:
-            possible_next_states = np.expand_dims(possible_next_states, axis=0) # Legg til en akse for antall inputs (1)
-        possible_next_states = np.expand_dims(possible_next_states, axis=3) # Legg til en akse for bitdybde (1)
-        return self._model.predict([possible_next_states])
+        # possible_next_state = np.array([possible_next_states])
+        if len(possible_next_states.shape) < 2:
+            possible_next_states = np.expand_dims(possible_next_states, axis=(0))
+
+        return self._model.predict(possible_next_states)
 
     def save_model(self, model_name, should_plot_model = False):
         print("Saving model...")
