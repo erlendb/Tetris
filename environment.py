@@ -32,7 +32,7 @@ class Environment():
             reward = -10
         return reward
     
-    def log_write(self, model_name, extra_information, epsilon):
+    def log_game(self, model_name, extra_information, epsilon):
         log_file = 'logs/' +  model_name + '.txt'
         with open(log_file, 'a') as log:
             if self.game_iterator == 0:
@@ -41,3 +41,16 @@ class Environment():
                 log.write(f"Timestamp: {datetime.now()}\n")
                 log.write(f"Game Rounds Score Epsilon ClearedLines\n")
             log.write(f"{self.game_iterator} {self.game.get_round_count()} {self.game_score} {epsilon} {self.game_cleared_lines}\n")
+
+    def log_moves(self, model_name, moves):
+        log_file = 'logs/' +  model_name + '-moves.txt'
+        with open(log_file, 'a') as log:
+            if self.game_iterator == 0:
+                log.write(f"Model name: {model_name}\n")
+                log.write(f"Timestamp: {datetime.now()}\n")
+                log.write(f"Game piece_type,x,y,rotation ...\n")
+            log.write(f"{self.game_iterator} ")
+            for piece_type, ((x, y), rotation) in moves:
+                log.write(f"{piece_type},{x},{y},{rotation} ")
+            log.write("\n")
+        
