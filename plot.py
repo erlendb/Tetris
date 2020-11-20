@@ -85,37 +85,42 @@ par1.set_ylabel("Score")
 par2.set_ylabel("Epsilon")
 par3.set_ylabel("Cleared lines")
 
-color1 = plt.cm.viridis(0)
+color1 = plt.cm.viridis(0.2)
 color2 = plt.cm.viridis(0.5)
 color3 = plt.cm.viridis(.9)
-color4 = plt.cm.viridis(.8)
+color4 = plt.cm.viridis(0)
 
-p1, = host.plot(game, rounds, '.', color=color1,label="Rounds")
-p2, = par1.plot(game, score, '.', color=color2, label="Score")
+host.plot(game, rounds, '.', color=color1, alpha=0.1)
+par1.plot(game, score, '.', color=color2, alpha=0.1)
 p3, = par2.plot(game, epsilon, color=color3, label="Epsilon")
-p4, = par3.plot(game, cleared_lines, '.', color=color4, label="Cleared lines")
+par3.plot(game, cleared_lines, '.', color=color4)
 
 rounds_polyfit = np.polyfit(game, rounds, 3)
 rounds_trend = np.poly1d(rounds_polyfit)
-host.plot(game, rounds_trend(game), color=color1)
+p1, = host.plot(game, rounds_trend(game), color=color1, label="Rounds")
 
 score_polyfit = np.polyfit(game, score, 3)
 score_trend = np.poly1d(score_polyfit)
-par1.plot(game, score_trend(game), color=color2)
+p2, = par1.plot(game, score_trend(game), color=color2, label="Score")
 
 cleared_lines_polyfit = np.polyfit(game, cleared_lines, 3)
 cleared_lines_trend = np.poly1d(cleared_lines_polyfit)
-par3.plot(game, cleared_lines_trend(game), color=color4)
+p4, = par3.plot(game, cleared_lines_trend(game), color=color4, label="Cleared lines")
 
 lns = [p1, p2, p3, p4]
 host.legend(handles=lns, loc='best')
+
+if max_score >= max_rounds:
+    host.set_ylim(min_score, max_score) # Scale rounds y-xis as score y-axis
+else:
+    par1.set_ylim(min_score, max_rounds)
 
 # right, left, top, bottom
 par2.spines['right'].set_position(('outward', 120))
 par3.spines['right'].set_position(('outward', 60))
 
-par2.xaxis.set_ticks(game)
-plt.locator_params(axis='x', nbins=5)
+#par2.xaxis.set_ticks(game)
+#plt.locator_params(axis='x', nbins=5)
 
 # Sometimes handy, same for xaxis
 #par2.yaxis.set_ticks_position('right')
