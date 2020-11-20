@@ -24,7 +24,8 @@ for i in range(env.number_of_games):
     while not env.game.is_game_over():
         board = env.game.board
         piece_matrix = env.game.get_piece()
-        piece = Piece(piece_matrix)
+        piece_type = env.game.piece.type
+        piece = Piece(piece_matrix, piece_type)
 
         possible_piece_placements = env.game.get_possible_piece_placements()
         #for p in possible_piece_placements: #debugger
