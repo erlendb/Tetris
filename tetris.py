@@ -14,7 +14,7 @@ class Position():
         self.y = y
 
 class Piece():
-    def __init__(self, matrix):
+    def __init__(self, matrix, type):
         self.matrix = matrix
 
         self.rotated_matrices = []
@@ -25,6 +25,9 @@ class Piece():
 
         self.rotation = 0
         self.position = Position()
+        
+        self.type = -1
+        self.type = type
 
     def rotate(self, rotation):
         self.rotation = (self.rotation + rotation) % 4
@@ -51,18 +54,30 @@ class Piece():
         self.position.y += movement
 
 class Board():
-    def __init__(self, width, height):
+    def __init__(self, width, height, better_visualization = False):
         self.width = width
         self.height = height
         self.matrix = [[0 for i in range(width)] for j in range(height)]
+    
+    def make_binary(self):
+        for j in range(0, self.width):
+            for i in range(0, self.height):
+                if self.matrix[i][j] > 0:
+                    self.matrix[i][j] = 1
 
     def add_piece(self, piece):
+        if self.better_visualization:
+            self.make_binary()
+            placed_piece_representation = 2
+        else:
+            placed_piece_representation = 1
+        
         for board_i in range(piece.position.y, min(self.height, piece.position.y + len(piece.matrix))):
             piece_i = -1 - (board_i - piece.position.y)
             for board_j in range(piece.position.x, piece.position.x + len(piece.matrix[0])):
                 piece_j = (board_j - piece.position.x)
-                if piece.matrix[piece_i][piece_j] == 1:
-                    self.matrix[board_i][board_j] = 1
+                if piece.matrix[piece_i][piece_j] > 0:
+                    self.matrix[board_i][board_j] = placed_piece_representation
 
     def pop_line(self, line):
         self.matrix.pop(line)
@@ -72,17 +87,17 @@ class Game():
     def __init__(self, board_width = 10, board_height = 20, pieces = None):
         if pieces is None:
             self.pieces = []
-            self.pieces.append(Piece([[1, 1, 1, 1]]))
-            self.pieces.append(Piece([[1, 0, 0], [1, 1, 1]]))
-            self.pieces.append(Piece([[0, 0, 1], [1, 1, 1]]))
-            self.pieces.append(Piece([[1, 1],    [1, 1]]))
-            self.pieces.append(Piece([[0, 1, 1], [1, 1, 0]]))
-            self.pieces.append(Piece([[0, 1, 0], [1, 1, 1]]))
-            self.pieces.append(Piece([[1, 1, 0], [0, 1, 1]]))
+            self.pieces.append(Piece([[1, 1, 1, 1]], 0))
+            self.pieces.append(Piece([[1, 0, 0], [1, 1, 1]], 1))
+            self.pieces.append(Piece([[0, 0, 1], [1, 1, 1]], 2))
+            self.pieces.append(Piece([[1, 1],    [1, 1]], 3))
+            self.pieces.append(Piece([[0, 1, 1], [1, 1, 0]], 4))
+            self.pieces.append(Piece([[0, 1, 0], [1, 1, 1]], 5))
+            self.pieces.append(Piece([[1, 1, 0], [0, 1, 1]], 6))
         else:
             self.pieces = []
             for i in range(0, len(pieces)):
-                self.pieces.append(Piece(pieces[i]))
+                self.pieces.append(Piece(pieces[i], i))
 
         self.board = Board(board_width, board_height)
 
@@ -115,14 +130,18 @@ class Game():
                     print(' ', end = '')
             print()
         print()
+        for i in range(0, 4 - len(next_piece.matrix)):
+            print()
 
         board_to_print = deepcopy(self.board)
         board_to_print.add_piece(self.piece)
         for i in reversed(range(0, len(board_to_print.matrix))):
             print('|', end = '')
             for j in range(0, len(board_to_print.matrix[0])):
-                if board_to_print.matrix[i][j] > 0:
+                if board_to_print.matrix[i][j] == 1:
                     print('X', end = '')
+                elif board_to_print.matrix[i][j] >= 2:
+                    print('O', end = '')
                 else:
                     print(' ', end = '')
             print('|')
@@ -144,7 +163,7 @@ class Game():
                     return False
                 elif piece.position.x < 0 or piece.position.x + len(piece.matrix[0]) - 1 >= self.board.width:
                     return False
-                elif (piece.matrix[piece_i][piece_j] == 1 and self.board.matrix[board_i][board_j] == 1):
+                elif (piece.matrix[piece_i][piece_j] == 1 and self.board.matrix[board_i][board_j] > 0):
                     return False
         return True
 
@@ -209,7 +228,7 @@ class Game():
         for j in range(self.board.width):
             shouldCountHoles = False
             for i in reversed(range(self.board.height)):
-                if self.board.matrix[i][j] == 1:
+                if self.board.matrix[i][j] > 0:
                     shouldCountHoles = True
                 if shouldCountHoles:
                     if self.board.matrix[i][j] == 0:
