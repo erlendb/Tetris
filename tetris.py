@@ -58,6 +58,7 @@ class Board():
         self.width = width
         self.height = height
         self.matrix = [[0 for i in range(width)] for j in range(height)]
+        self.better_visualization = better_visualization
     
     def make_binary(self):
         for j in range(0, self.width):
