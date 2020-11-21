@@ -3,10 +3,10 @@ import keyboard
 import time
 
 ### Change these settings before running main.py
-load_moves_log = '1605900309.2927291tester-brikkeplassering-etter-pr-runde2-moves.txt'
+load_moves_log = '1605965316.591669test-etter-halvferdig-runde4-moves.txt'
 start_at_game = 0
-time_limit_round = -1
-time_limit_game = -1
+time_limit_round = 1 # Seconds between each piece placement. -1 if you want to tick with pressing the space button
+time_limit_game = 2 # Seconds from game over to new game. -1 if you want to go to next game by pressing the space button
 ###
 
 data_starts_at_line = 4
