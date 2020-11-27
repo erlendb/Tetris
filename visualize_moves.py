@@ -71,7 +71,7 @@ while not i > len(games):
         while not should_go_further(time_limit=time_limit_round):
             pass
         print()
-        print('Game number: ', i)
+        print('Game number: ', start_at_game + i)
         print('Move number: ', j)
         move = games[i][j]
         piece_type = int(move[0])
