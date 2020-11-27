@@ -110,9 +110,11 @@ p4, = par3.plot(game, cleared_lines_trend(game), color=color4, label="Cleared li
 lns = [p1, p2, p3, p4]
 host.legend(handles=lns, loc='best')
 
+
 if max_score >= max_rounds:
-    host.set_ylim(min_score, max_score) # Scale rounds y-xis as score y-axis
+    host.set_ylim(min(min_score, min_rounds), max_score) # Scale rounds y-xis as score y-axis
 else:
+    host.set_ylim(min(min_score, min_rounds), max_rounds)
     par1.set_ylim(min_score, max_rounds)
 
 # right, left, top, bottom
