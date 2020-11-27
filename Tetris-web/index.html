@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Deep Q-learning Tetris</title>
+    <script src='./jquery/jquery-3.5.1.js'></script>
+    <link rel='stylesheet' href='./style.css'>
+    <script src='./tetris.js'></script>
+  </head>
+  <body>
+    <div id='container'>
+      <h1>Visual representation of the training of Deep Q-learning Tetris</h1>
+      
+      <div id='info1'>
+        <p>
+          The game board below is the actual moves performed by a Deep Q-learning
+          algorithm during training. On the bottom of this page there is a figure
+          representing the same games.
+        </p>
+        <p>
+          Under the game board are options for showing a specific game, and also
+          controls for the speed of the visualization.
+        </p>
+        <p>
+          "Game number" is between 0 and 9999, where 0 is first game of the training.
+          "Rounds" is the number of rounds (and also the number of pieces placed) in the specific game.
+          "Score" is the score obtained in the specific game. On each piece placement that does not lead to game over, (1 + cleared_lines^2) points will be added to the score. On game over -10 points are added to the score.
+          "Epsilon" tells us whether to focus on exploring or exploitation. With an epsilon of 1, the algorithm will always choose random moves. With an epsilon of 0 the algorithm will always use the trained model.
+          "Cleared lines" is the amount of lines cleared the specific game.
+      </div>
+      
+      <div id='stats'>
+        <div>
+          <span>Game number:</span>
+          <span id='gameNumber'></span>
+        </div>
+        <div>
+          <span>Rounds:</span>
+          <span id='rounds'></span>
+        </div>
+        <div>
+          <span>Score:</span>
+          <span id='score'></span>
+        </div>
+        <div>
+          <span>Epsilon:</span>
+          <span id='epsilon'></span>
+        </div>
+        <div>
+          <span>Cleared lines:</span>
+          <span id='cl'></span>
+        </div>
+        <div id='roundNumberContainer'>
+          <span>Round number:</span>
+          <span id='roundNumber'></span>
+        </div>
+      </div>
+        
+      <div id='boardContainer'></div>
+      
+      <div id='settings'>
+        <div>
+          <label for='setGame'>Go to game number (from 0 to 9999)</label>
+          <input name='setGame' type='number' value=0 />
+          <input id='setGameSubmit' type='submit' value='Go' />
+        </div>
+      
+        <div>
+          <label for='setSleep'>Set animation sleep time between each piece placement (ms):</label>
+          <input name='setSleep' type='number' value=500 />
+          <input id='setSleepSubmit' type='submit' value='Change' />
+        </div>
+      </div>
+      
+      <div id='graph'>
+        <span>Figure representing the same games as visualized above:</span>
+        <div>
+          <img src='figure.png' />
+        </div>
+      </div>
+    </div>
+    
+    <script src='./logs/data1_game.js'></script>
+    <script src='./logs/data1_moves.js'></script>
+    <script src='./app.js'></script>
+  </body>
+</html>

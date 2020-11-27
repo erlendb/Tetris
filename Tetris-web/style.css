@@ -1,0 +1,74 @@
+body {
+  background: #444;
+  color: #ccc;
+}
+
+#container {
+  width: fit-content;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#stats {
+  width: 240px;
+    width: fit-content;
+    margin: 0 auto;
+  text-align: center;
+}
+
+#roundNumberContainer {
+  margin-top:10px;
+}
+
+#info1 {
+  width:500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#boardContainer {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.board {
+}
+
+.line {
+}
+
+.pixel {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+  background: #111;
+}
+
+.pixel[value="1"] {
+  background: #00c;
+}
+
+.pixel[value="2"] {
+  background: #c00;
+}
+
+#settings {
+  margin-top: 10px;
+}
+
+#settings div {
+  padding:5px;
+}
+
+input {
+  width: 60px;
+}
+
+#graph {
+  margin-top:20px;
+}
+
+#graph div {
+  margin-top:10px;
+}
