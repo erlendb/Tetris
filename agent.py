@@ -102,7 +102,7 @@ class Agent():
 
         return model
 
-    def train(self):
+    def train(self, reward_weight = 1):
         """
         Train the neural network on a sample from the internal memory
         """
@@ -124,7 +124,7 @@ class Agent():
         
         q_values = np.array([]) # Y_values for network
         for index in range(0, sample_size):
-            reward = sample[index][1]
+            reward = sample[index][1]*reward_weight
 
             if index == self._mem_index - 1: # Last piece placement in the game. This is clearly a game over-placement
                 q_values = np.append(q_values, reward)

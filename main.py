@@ -47,10 +47,13 @@ for i in range(env.number_of_games):
     env.log_game(model_name = model_name, extra_information = log_extra_information, epsilon = agt.epsilon)
     if should_log_moves:
         env.log_moves(model_name = model_name, moves=moves)
+    
+    game_score = env.game_score
+    
     env.reset_game()
 
     if should_train:
-        agt.train()
+        agt.train(reward_weight = game_score)
     agt.clear_memory()
     
     if (i % 100) == 0:
